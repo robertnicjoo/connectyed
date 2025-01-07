@@ -458,6 +458,7 @@
             <button
               @click="addLanguage"
               class="mt-2 px-4 py-2 rounded"
+              type="button"
               :class="{
                 'bg-blue-500 text-white': !(form.languages.length >= 5),
                 'bg-gray-400 text-gray-600 cursor-not-allowed': form.languages.length >= 4
@@ -959,11 +960,6 @@ export default {
               this.errors.age = 'Please enter a valid age';
               hasError = true;
             }
-
-             if (!this.form.education) {
-               this.errors.education = 'Education is required';
-               hasError = true;
-             }
              if (!this.form.gender) {
                this.errors.gender = 'Gender is required';
                hasError = true;
@@ -1227,15 +1223,9 @@ export default {
         // Append all client-specific fields
         formData.append('gender', this.form.gender);
         formData.append('hairColor', this.form.hairColor);
-        // formData.append('bodyType', this.form.bodyType);
-
         this.form.bodyType.forEach(item => {
           formData.append('bodyType[]', item); // Append directly without JSON.stringify
         });
-
-
-        // formData.append('ethnicity', this.form.ethnicity);
-
         this.form.ethnicity.forEach(item => {
           formData.append('ethnicity[]', item);
         });
@@ -1243,12 +1233,9 @@ export default {
         formData.append('heightInches', this.form.heightInches);
         formData.append('maritalStatus', this.form.maritalStatus);
         formData.append('children', this.form.children);
-        // formData.append('religion', this.form.religion);
-
         this.form.religion.forEach(item => {
           formData.append('religion[]', item); // Append directly without JSON.stringify
         });
-
         formData.append('smoker', this.form.smoker === true ? '1' : '0');
         formData.append('drinker', this.form.drinker);
         formData.append('education', this.form.education);
@@ -1256,22 +1243,10 @@ export default {
         formData.append('jobTitle', this.form.jobTitle);
         formData.append('sports', this.form.sports);
         formData.append('hobbies', this.form.hobbies);
-        // this.form.languages.forEach(item => {
-        //   formData.append('languages[]', JSON.stringify(item)); // Send language-level pairs as JSON strings
-        // });
-
-
         this.form.languages.forEach((item, index) => {
           formData.append(`languages[${index}][language]`, item.language[index]);
           formData.append(`languages[${index}][level]`, item.level[index]);
         });
-
-        // this.form.languages.language.forEach((lang, index) => {
-        //   formData.append(`languages[${index}][language]`, lang);
-        //   formData.append(`languages[${index}][level]`, this.form.languages.level[index]);
-        // });
-
-
         formData.append('seeking', this.form.seeking); // Add this line
         formData.append('min_age', this.form.min_age); 
         formData.append('max_age', this.form.max_age); 
@@ -1341,8 +1316,6 @@ export default {
           education: 'Education',
           occupation: 'Occupation',
           jobTitle: 'Job Title',
-          sports: 'Sports',
-          hobbies: 'Hobbies',
           languages: 'Languages',
           seeking: 'Seeking',
         };
