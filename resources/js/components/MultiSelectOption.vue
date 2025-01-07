@@ -106,15 +106,27 @@
       },
       toggleSelection(option) {
         const index = this.selectedOptions.indexOf(option);
-  
+
         if (index === -1) {
           this.selectedOptions.push(option);
         } else {
           this.selectedOptions.splice(index, 1);
         }
-  
+
         this.$emit('update:modelValue', this.selectedOptions);
       },
+      handleClickOutside(event) {
+        const dropdown = this.$el.querySelector('.relative');
+        if (dropdown && !dropdown.contains(event.target)) {
+          this.dropdownOpen = false;
+        }
+      },
+    },
+    mounted() {
+      document.addEventListener('click', this.handleClickOutside);
+    },
+    beforeUnmount() {
+      document.removeEventListener('click', this.handleClickOutside);
     },
     watch: {
       dropdownOpen(value) {

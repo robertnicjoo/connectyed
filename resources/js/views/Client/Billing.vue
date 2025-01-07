@@ -57,7 +57,7 @@
     <!-- Package Options Header -->
     <div class="mb-6">
       <h2 class="text-xl font-bold mb-2">
-        {{ hasPackage ? 'Upgrade Your Package' : 'Dating Packages' }}fmatch
+        {{ hasPackage ? 'Upgrade Your Package' : 'Dating Packages' }}
       </h2>
       <p v-if="hasPackage" class="text-gray-600">
         Upgrade to get access to more criteria and better matches!
