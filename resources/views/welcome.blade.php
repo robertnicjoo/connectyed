@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="<?=url('/');?>/assets/css/lightcase.css">
         <link rel="stylesheet" href="<?=url('/');?>/assets/css/connectyed.css">        
         @vite(['resources/js/app.js'])
+        <!-- Google tag (gtag.js) --> <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16739328770"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-16739328770'); </script>
     </head>
     <body class="bg-connectyed-body-light">
         <!-- preloader start here -->

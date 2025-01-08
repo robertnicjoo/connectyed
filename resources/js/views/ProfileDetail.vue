@@ -31,9 +31,44 @@ export default {
       }
     },
     mounted() {
+        this.addGlobalMetaTags();
         this.getProfile();
     },
-    methods: {                        
+    methods: {
+        addGlobalMetaTags() {
+            // Set the title
+            document.title = "Profile Details | Premium Matchmaking for Busy Professionals";
+
+            // Add meta description
+            const description = document.createElement("meta");
+            description.setAttribute("name", "description");
+            description.setAttribute("content", "Discover personalized matchmaking services with Comnectyed. Connect with expert matchmakers who understand your needs as a busy professional and start your journey to meaningful relationships today.");
+            document.head.appendChild(description);
+
+            // Add Open Graph tags for social sharing
+            const ogTitle = document.createElement("meta");
+            ogTitle.setAttribute("property", "og:title");
+            ogTitle.setAttribute("content", "Profile Details | Premium Matchmaking for Busy Professionals");
+            document.head.appendChild(ogTitle);
+
+
+            const ogDescription = document.createElement("meta");
+            ogDescription.setAttribute("property", "og:description");
+            ogDescription.setAttribute("content", "Discover personalized matchmaking services with Comnectyed. Connect with expert matchmakers who understand your needs as a busy professional and start your journey to meaningful relationships today.");
+            document.head.appendChild(ogDescription);
+
+
+            const ogImage = document.createElement("meta");
+            ogImage.setAttribute("property", "og:image");
+            ogImage.setAttribute("content", "https://www.comnectyed.com/logo.png");
+            document.head.appendChild(ogImage);
+
+
+            const ogUrl = document.createElement("meta");
+            ogUrl.setAttribute("property", "og:url");
+            ogUrl.setAttribute("content", `https://www.comnectyed.com/${this.$route.params.username}`);
+            document.head.appendChild(ogUrl);
+        },
         async getProfile() {
             this.processing = true            
             const username = this.$route.params.username

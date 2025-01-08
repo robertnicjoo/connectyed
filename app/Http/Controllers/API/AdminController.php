@@ -7,13 +7,30 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Meeting;
 
 class AdminController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => []]);
-    }   
+    } 
+
+    public function overviews()
+    {
+        $totalUsers = User::count();
+        $totalMatchmakers = User::where('role', 'matchmaker')->count();
+        $totalCandidates = User::where('role', 'candidate')->count();
+        $totalClients = User::where('role', 'client')->count();
+        $totalMeetings = Meeting::count();
+        return response()->json([
+            'totalUsers' => $totalUsers,
+            'totalMatchmakers' => $totalMatchmakers,
+            'totalCandidates' => $totalCandidates,
+            'totalClients' => $totalClients,
+            'totalMeetings' => $totalMeetings,
+        ], 200);
+    }
 
     /**
      * Fetch users with role 'candidate' along with their profiles.

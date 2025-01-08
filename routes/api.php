@@ -125,6 +125,7 @@ Route::middleware('auth:api')->prefix('admin')->group(function () {
     Route::get('candidates', [AdminController::class, 'getCandidates']);
     Route::post('candidates/approve', [AdminController::class, 'approveCandidate']);
     Route::get('clients', [AdminController::class, 'getClients']);
+    Route::get('overviews', [AdminController::class, 'overviews']);
 });
 
 

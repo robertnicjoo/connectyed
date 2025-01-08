@@ -19,29 +19,32 @@ export default {
 
       // Add meta description
       const description = document.createElement("meta");
-      description.name = "description";
-      description.content = "Discover personalized matchmaking services with Comnectyed. Connect with expert matchmakers who understand your needs as a busy professional and start your journey to meaningful relationships today.";
+      description.setAttribute("name", "description");
+      description.setAttribute("content", "Discover personalized matchmaking services with Comnectyed. Connect with expert matchmakers who understand your needs as a busy professional and start your journey to meaningful relationships today.");
       document.head.appendChild(description);
 
       // Add Open Graph tags for social sharing
       const ogTitle = document.createElement("meta");
-      ogTitle.property = "og:title";
-      ogTitle.content = "Comnectyed | Premium Matchmaking for Busy Professionals";
+      ogTitle.setAttribute("property", "og:title");
+      ogTitle.setAttribute("content", "Comnectyed | Premium Matchmaking for Busy Professionals");
       document.head.appendChild(ogTitle);
 
+
       const ogDescription = document.createElement("meta");
-      ogDescription.property = "og:description";
-      ogDescription.content = "Discover personalized matchmaking services with Comnectyed. Connect with expert matchmakers who understand your needs as a busy professional and start your journey to meaningful relationships today.";
+      ogDescription.setAttribute("property", "og:description");
+      ogDescription.setAttribute("content", "Discover personalized matchmaking services with Comnectyed. Connect with expert matchmakers who understand your needs as a busy professional and start your journey to meaningful relationships today.");
       document.head.appendChild(ogDescription);
 
+
       const ogImage = document.createElement("meta");
-      ogImage.property = "og:image";
-      ogImage.content = "https://www.comnectyed.com/logo.png";
+      ogImage.setAttribute("property", "og:image");
+      ogImage.setAttribute("content", "https://www.comnectyed.com/logo.png");
       document.head.appendChild(ogImage);
 
+
       const ogUrl = document.createElement("meta");
-      ogUrl.property = "og:url";
-      ogUrl.content = "https://www.comnectyed.com";
+      ogUrl.setAttribute("property", "og:url");
+      ogUrl.setAttribute("content", "https://www.comnectyed.com");
       document.head.appendChild(ogUrl);
     },
 
