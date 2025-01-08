@@ -40,7 +40,7 @@
                                 <div
                                     class="w-[45px] h-[61px] p-1 overflow-hidden cursor-pointer"
                                     v-for="(image, index) in profile.additionalImages"
-                                    :key="image" <!-- Ensure unique key -->
+                                    :key="image"
                                 >
                                     <img
                                         :src="image"
@@ -89,7 +89,7 @@
                         <!-- User Name -->
                         <div class="flex flex-wrap mb-1">
                             <div class="w-full">
-                                <label class="text-gray-700 text-2xl font-semibold">
+                                <label class="text-gray-700 text-2xl font-semibold capitalize">
                                     {{ profile.name }}
                                 </label>
                             </div>
@@ -99,7 +99,7 @@
                         <div class="flex flex-wrap mb-1">
                             <div class="w-full">
                                 <label class="text-gray-700 text-2xl">
-                                    {{ profile.city || 'Your City' }}, {{ profile.country || 'Your Country' }}
+                                    {{ userCity || 'Your City' }}, {{ profile.country || 'Your Country' }}
                                 </label>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         <div class="flex flex-wrap mb-3">
                             <div class="w-full">
                                 <label class="text-gray-700 text-md font-medium">
-                                    Location:
+                                    Location:&ThickSpace;
                                 </label>
                                 <span>{{ profile.location || 'Your current location / City' }}</span>
                             </div>
@@ -138,66 +138,38 @@
                         </div>
                     </div>
 
-                    <!-- City and State -->
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <!-- City -->
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="city">
-                                City
-                            </label>
-                            <input
-                                class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                v-model="profile.city"
-                                id="city"
-                                type="text"
-                                required
-                            />
-                        </div>
-
-                        <!-- State -->
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="state">
-                                State
-                            </label>
-                            <input
-                                class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                v-model="profile.state"
-                                id="state"
-                                type="text"
-                                required
-                            />
-                        </div>
-                    </div>
-
                     <!-- Country -->
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="country">
-                                Country
-                            </label>
-                            <div class="relative">
-                                <select
-                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="profile.country"
-                                    id="country"
-                                    required
-                                >
-                                    <option value="">Select Country</option>
-                                    <!-- Dynamic Country Options -->
-                                    <option
-                                        v-for="(country, index) in countries"
-                                        :key="country"
-                                        :value="country"
-                                    >
-                                        {{ country }}
-                                    </option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4">Location Details</h3>
+                        <div class="grid grid-cols-3 md:grid-cols-3 gap-1">
+                        <select-option
+                            label="Country"
+                            :options="filteredCountries"
+                            v-model="profile.country"
+                            :required="true"
+                            class="appearance-none block w-full border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                            @change="handleCountrySearch(profile.country)"
+                        />
+
+                        <!-- State Dropdown -->
+                        <select-option
+                            label="State"
+                            :options="filteredStates"
+                            v-model="profile.state"
+                            :required="true"
+                            class="appearance-none block w-full border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                            @change="handleStateSearch(profile.state)"
+                        />
+
+                        <!-- City Dropdown -->
+                        <select-option
+                            label="City"
+                            :options="filteredCities"
+                            v-model="profile.city"
+                            :required="true"
+                            class="appearance-none block w-full border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                            @change="handleCitySearch(profile.city)"
+                        />
                         </div>
                     </div>
 
@@ -278,24 +250,17 @@
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <!-- Body Type -->
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="bodytype">
-                                Body Type
-                            </label>
                             <div class="relative">
-                                <select
+                                <MultiSelectOption
+                                    label="Body Type"
                                     class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    :options="bodyTypes"
                                     v-model="profile.bodytype"
-                                    id="bodytype"
-                                    required
-                                >
-                                    <option value="">Select Body Type</option>
-                                    <option>Slender</option>
-                                    <option>Average</option>
-                                    <option>Athletic</option>
-                                    <option>Curvy</option>
-                                    <option>Big and Beautiful</option>
-                                    <!-- Add more body types if needed -->
-                                </select>
+                                    :required="true"
+                                />
+                                
+                                    <!-- 
+                                    id="bodytype" -->
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                         <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
@@ -340,97 +305,31 @@
                     </div>
 
                     <!-- Marital Status and Children -->
-                    <div class="flex flex-wrap -mx-3 mb-6">
+                    <div class="grid grid-cols-3 md:grid-cols-3 gap-4 mt-4">
                         <!-- Marital Status -->
-                        <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="maritalstatus">
-                                Marital Status
-                            </label>
-                            <div class="relative">
-                                <select
-                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="profile.maritalstatus"
-                                    id="maritalstatus"
-                                    required
-                                >
-                                    <option value="">Select Status</option>
-                                    <option>Single</option>
-                                    <option>Separated</option>
-                                    <option>Divorced</option>
-                                    <!-- Add more statuses if needed -->
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
+                        <MultiSelectOption 
+                            label="Marital Status" 
+                            v-model="profile.maritalstatus" 
+                            :options="maritalStatuses" 
+                            :required="true"
+                            :maxItem="1"
+                        />
 
                         <!-- Children -->
-                        <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="children">
-                                Children
-                            </label>
-                            <div class="relative">
-                                <select
-                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="profile.children"
-                                    id="children"
-                                    required
-                                >
-                                    <option value="">Select Number</option>
-                                    <option>0</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <!-- Add more numbers if needed -->
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
+                        <select-option
+                            label="Current Kid(s)"
+                            :options="childrenOptions"
+                            v-model="profile.children"
+                            :required="true"
+                        />
 
                         <!-- Religion -->
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="religion">
-                                Religion
-                            </label>
-                            <div class="relative">
-                                <select
-                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="profile.religion"
-                                    id="religion"
-                                    required
-                                >
-                                    <option value="">Select Religion</option>
-                                    <option>Baha'i</option>
-                                    <option>Buddhism</option>
-                                    <option>Catholic</option>
-                                    <option>Christian</option>
-                                    <option>Confucianism</option>
-                                    <option>Hinduism</option>
-                                    <option>Islam</option>
-                                    <option>Jainism</option>
-                                    <option>Judaism</option>
-                                    <option>Shinto</option>
-                                    <option>Sikhism</option>
-                                    <option>Taoism</option>
-                                    <option>Zoroastrianism</option>
-                                    <option>Other</option>
-                                    <!-- Add more religions if needed -->
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
+                        <MultiSelectOption
+                            label="Religion"
+                            :options="religions"
+                            v-model="profile.religion"
+                            :required="true"
+                        />
                     </div>
 
                     <!-- Smoker and Drinker -->
@@ -550,34 +449,7 @@
                     </div>
 
                     <!-- English Level and Languages -->
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <!-- English Level -->
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="english_level">
-                                English Level
-                            </label>
-                            <div class="relative">
-                                <select
-                                    class="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    v-model="profile.english_level"
-                                    id="english_level"
-                                    required
-                                >
-                                    <option value="">Select Level</option>
-                                    <option>Beginner</option>
-                                    <option>Intermediate</option>
-                                    <option>Proficient</option>
-                                    <!-- Add more levels if needed -->
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Languages -->
+                    <!-- <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="languages">
                                 Languages
@@ -589,6 +461,73 @@
                                 type="text"
                                 required
                             />
+                        </div>
+                    </div> -->
+
+                    <!-- Languages and Levels -->
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+                        <div class="space-y-4">
+                        <label for="languages" class="block">Languages</label>
+                        <!-- Language-Level Pairing -->
+                        <div v-for="(item, index) in profile.languages" :key="index" class="flex space-x-4">
+                            <!-- Language Input -->
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="languages">
+                                Language
+                            </label>
+                            <select
+                                class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                v-model="item.language"
+                                required
+                            >
+                                <option value="" disabled>Select language</option>
+                                <option v-for="(language, i) in languages" :key="i" :value="language">
+                                {{ language }}
+                                </option>
+                            </select>
+                            </div>
+
+                            <!-- Level Select -->
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="level">
+                                Level
+                            </label>
+                            <select
+                                v-model="item.level"
+                                class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                required
+                            >
+                                <option value="" disabled>Select level</option>
+                                <option v-for="(level, i) in englishLevels" :key="i" :value="level">
+                                {{ level }}
+                                </option>
+                            </select>
+                            </div>
+
+                            <!-- Remove Language Button -->
+                            <button
+                            @click="removeLanguage(index)"
+                            type="button"
+                            class="ml-2 text-red-500"
+                            :disabled="profile.languages.length <= 1"
+                            >
+                            Remove
+                            </button>
+                        </div>
+
+                        <!-- Add Language Button -->
+                        <button
+                            @click="addLanguage"
+                            class="mt-2 px-4 py-2 rounded"
+                            type="button"
+                            :class="{
+                            'bg-blue-500 text-white': !(profile.languages.length >= 4),
+                            'bg-gray-400 text-gray-600 cursor-not-allowed': profile.languages.length >= 4
+                            }"
+                            :disabled="profile.languages.length >= 4"
+                        >
+                            Add Language
+                        </button>
                         </div>
                     </div>
 
@@ -626,25 +565,53 @@
 <script>
 // Import the countries array from countries.js
 import { countries } from '../../components/countries.js';
+import MultiSelectOption from '../../components/MultiSelectOption.vue';
+import SelectOption from '../../components/SelectOption.vue';
 import axios from 'axios';
 
 export default {
     name: "Profile",
     data() {
         return {
+            bodyTypes: ['Slender', 'Average', 'Athletic', 'Curvy', 'Big and Beautiful'],
+            languages: [
+                'English', 'Spanish', 'Mandarin', 'Hindi', 'Arabic', 'Bengali', 'Portuguese', 
+                'Russian', 'Japanese', 'Punjabi', 'German', 'Javanese', 'Korean', 'French', 
+                'Turkish', 'Vietnamese', 'Telugu', 'Chinese', 'Marathi', 'Tamil'
+            ],
+            englishLevels: ['Native', 'Beginner', 'Intermediate', 'Proficient'],
+            maritalStatuses: ['Single', 'Separated', 'Divorced', 'Married', 'Widowed'],
+            childrenOptions: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+            religions: [
+                'Buddhism', 'Catholic', 'Christian', 'Confucianism', 'Hinduism',
+                'Islam', 'Jainism', 'Judaism', 'Shinto', 'Sikhism',
+                'Taoism', 'Zoroastrianism', 'Other'
+            ],
+            userCity: '',
+            countries: countries,
+            filteredCountries: countries.map(country => country.name), // For search functionality
             user: {},
             profile: {
-                bio: '', // Initialize bio
-                english_level: '', // Initialize english_level
-                // Initialize other fields as needed
-                additionalImages: [], // Ensure additionalImages is initialized
+                bio: '',
+                country: '',
+                state: '',
+                city: '',
+                bodytype: [],
+                languages: [],
+                additionalImages: [],
+                maritalstatus: [],
+                children: '',
+                religion: [],
             },
             isFormVisible: false,
             processing: false,
             currentAvatar: null,
             authorization: this.$store.state.auth.authorization,
-            countries: countries, // Add the imported countries to data
         };
+    },
+    components: {
+        MultiSelectOption,
+        SelectOption,
     },
     computed: {
         // Access user and profile from Vuex store
@@ -659,10 +626,60 @@ export default {
         this.getProfile();
     },
     methods: {
+        // Handle country search
+        handleCountrySearch(query) {
+            // Filter states based on the selected country
+            const selected = this.countries.find(country => country.name === query);
+            this.filteredStates = selected ? selected.states.map(state => state.name) : [];
+            // Reset the selected state and city when the country changes
+            this.profile.state = null;
+            this.profile.city = null;
+        },
+        // Handle state search
+        handleStateSearch(query) {
+            // Filter cities based on the selected state
+            const country = this.countries.find(country => country.name === this.profile.country);
+            const selected = country ? country.states.find(state => state.name === query) : null;
+            this.filteredCities = selected ? selected.cities : [];
+            
+            // Reset the selected city when the state changes
+            this.profile.city = null;
+        },
+        // Handle city search based on selected state
+        handleCitySearch(query) {
+            // If no state is selected, reset the city options
+            if (!this.profile.state) {
+                this.filteredCities = [];
+                return;
+            }
+
+            // Find the country that has the selected state
+            const country = this.countries.find(c => c.name === this.profile.country);
+            if (!country) return;
+
+            // Find the selected state within the country
+            const state = country.states.find(s => s.name === this.profile.state);
+            if (!state) return;
+
+            // If no query is entered, show all cities in the selected state
+            if (!query) {
+                this.filteredCities = state.cities;
+                return;
+            }
+        },
+        addLanguage() {
+            // Add a new language-level pair
+            this.profile.languages.push({ language: '', level: '' });
+        },
+        removeLanguage(index) {
+            // Remove language-level pair at the specified index
+            if (this.profile.languages.length > 1) {
+                this.profile.languages.splice(index, 1);
+            }
+        },
         toggleFormVisibility() {
             this.isFormVisible = !this.isFormVisible;
         },
-
         /**
          * Fetch the user's profile from the backend API.
          */
@@ -677,11 +694,73 @@ export default {
                     this.profile = response.data.data;
                     this.user = response.data.data.user;
 
+                    this.userCity = this.profile.city;
+                    
                     // Ensure additionalImages is an array
                     if (!Array.isArray(this.profile.additionalImages)) {
                         this.profile.additionalImages = [];
                     }
 
+                    // Decode bodytype from JSON string to array
+                    if (typeof this.profile.bodytype === 'string') {
+                        try {
+                            this.profile.bodytype = JSON.parse(this.profile.bodytype);
+                        } catch (error) {
+                            console.error('Error parsing bodytype:', error);
+                            this.profile.bodytype = [];
+                        }
+                    }
+
+                    // Initialize as empty array if still undefined
+                    if (!Array.isArray(this.profile.bodytype)) {
+                        this.profile.bodytype = [];
+                    }
+
+                    // Decode languages from JSON string to array
+                    if (typeof this.profile.languages === 'string') {
+                        try {
+                        this.profile.languages = JSON.parse(this.profile.languages);
+                        } catch (error) {
+                        console.error('Error parsing languages:', error);
+                        this.profile.languages = [];
+                        }
+                    }
+
+                    // Initialize as empty array if still undefined
+                    if (!Array.isArray(this.profile.languages)) {
+                        this.profile.languages = [];
+                    }
+
+                    // Decode religion from JSON string to array
+                    if (typeof this.profile.religion === 'string') {
+                        try {
+                            this.profile.religion = JSON.parse(this.profile.religion);
+                        } catch (error) {
+                            console.error('Error parsing religion:', error);
+                            this.profile.religion = [];
+                        }
+                    }
+
+                    // Initialize as empty array if still undefined
+                    if (!Array.isArray(this.profile.religion)) {
+                        this.profile.religion = [];
+                    }
+
+                    // Decode maritalstatus from JSON string to array
+                    if (typeof this.profile.maritalstatus === 'string') {
+                        try {
+                            this.profile.maritalstatus = JSON.parse(this.profile.maritalstatus);
+                        } catch (error) {
+                            console.error('Error parsing maritalstatus:', error);
+                            this.profile.maritalstatus = [];
+                        }
+                    }
+
+                    // Initialize as empty array if still undefined
+                    if (!Array.isArray(this.profile.maritalstatus)) {
+                        this.profile.maritalstatus = [];
+                    }
+                    
                     // Set current avatar
                     this.currentAvatar = this.profile.profile_image1 || '/upload/images/profiles/default.png';
 
@@ -707,39 +786,58 @@ export default {
             try {
                 axios.defaults.headers.common.Authorization = `Bearer ${this.authorization.token}`;
                 
-                const payload = {
-                    profile: {
-                        ...this.profile,
-                        name: this.profile.name || this.user.name,
-                        bio: this.profile.bio || '',
-                        english_level: this.profile.english_level || '',
-                        // Convert smoker to boolean if it's a string
-                        smoker: typeof this.profile.smoker === 'string' 
-                            ? (this.profile.smoker === 'true' || this.profile.smoker === true) 
-                            : this.profile.smoker,
-                    }
-                };
+                // Initialize FormData
+                const formData = new FormData();
+                
+                // Append profile fields to formData
+                formData.append('profile[name]', this.profile.name || this.user.name);
+                formData.append('profile[bio]', this.profile.bio || '');
+                formData.append('profile[country]', this.profile.country || '');
+                formData.append('profile[state]', this.profile.state || '');
+                formData.append('profile[city]', this.profile.city || '');                
+                formData.append('profile[children]', this.profile.children || '');
 
-                const response = await axios.put('/api/profile/updateprofile', payload);
+                // Append bodyType array
+                this.profile.maritalstatus.forEach(item => {
+                    formData.append('profile[maritalstatus][]', item);
+                });
+
+                // Append bodyType array
+                this.profile.bodytype.forEach(item => {
+                    formData.append('profile[bodytype][]', item);
+                });
+
+                // Append languages array
+                this.profile.languages.forEach((item, index) => {
+                    formData.append(`profile[languages][${index}][language]`, item.language);
+                    formData.append(`profile[languages][${index}][level]`, item.level);
+                });
+
+                this.profile.religion.forEach(item => {
+                    formData.append('profile[religion][]', item);
+                });
+
+                // Smoker field
+                const smoker = typeof this.profile.smoker === 'string'
+                    ? (this.profile.smoker === 'true' || this.profile.smoker === true)
+                    : this.profile.smoker;
+                formData.append('profile[smoker]', smoker);
+
+                // Send the FormData via Axios PUT request
+                const response = await axios.post('/api/profile/updateprofile', formData);
 
                 if (response.data.success) {
-                    // Update profile and user data with the response
+                    // Update the profile data
                     this.profile = response.data.data;
                     this.user = response.data.data.user;
 
-                    // Ensure additionalImages is an array
-                    if (!Array.isArray(this.profile.additionalImages)) {
-                        this.profile.additionalImages = [];
-                    }
-
-                    // Update Vuex store with new data
+                    // Update Vuex store
                     this.$store.commit('auth/SET_USER', this.user);
                     this.$store.commit('auth/SET_PROFILE', this.profile);
 
-                    // Update current avatar
                     this.currentAvatar = this.profile.profile_image1 || '/upload/images/profiles/default.png';
-
                     this.isFormVisible = false;
+
                     alert('Profile updated successfully');
                 } else {
                     alert('Failed to update profile.');
@@ -829,8 +927,51 @@ export default {
             }
         },
     },
+    watch: {
+        // Watch for changes in selected country to reset filtered states and cities
+        'profile.country'(newCountry) {
+        const country = this.countries.find(c => c.name === newCountry);
+        if (country) {
+            console.log('New country:', newCountry);
+            this.profile.state = null; // Reset selected state when country changes
+            this.profile.city = null; // Reset selected city when country changes
+            this.filteredStates = country.states.map(state => state.name);
+            this.filteredCities = []; // Clear cities when country changes
+        } else {
+            this.filteredStates = [];
+            this.filteredCities = [];
+        }
+        },
+
+        // Watch for changes in selected state to reset filtered cities
+        'profile.state'(newState) {
+        if (!this.profile.country) return;
+
+        const country = this.countries.find(c => c.name === this.profile.country);
+        if (!country) return;
+
+        const state = country.states.find(s => s.name === newState);
+        if (state) {
+            console.log('New state:', newState);
+
+            this.profile.city = null; // Reset selected city when state changes
+            this.filteredCities = state.cities;
+        } else {
+            this.filteredCities = [];
+        }
+        },
+
+        // Watch for changes in selected city
+        'profile.city'(newCity) {
+            if (newCity) {
+                // You can perform any additional actions or logic when a city is selected
+                console.log(`New city: ${newCity}`);
+            }
+        },
+    },
 };
 </script>
+
 <style scoped>
 /* Add any component-specific styles here */
 

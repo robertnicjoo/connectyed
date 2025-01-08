@@ -111,8 +111,10 @@ class AuthController extends Controller
                     'ethnicity.*' => 'string', // Each value must be a string
                     'heightFeet' => 'required|integer|min:1|max:8',
                     'heightInches' => 'required|integer|min:0|max:11',
-                    'maritalStatus' => 'required|string|max:50',
-                    'children' => 'required|integer|min:0|max:10',
+                    'maritalStatus' => 'required|array|min:1',
+                    'maritalStatus.*' => 'string|distinct', // Each marital status must be a unique string
+                    'children' => 'required|array|min:1',  // Must be an array with at least one value
+                    'children.*' => 'string',
                     'smoker' => 'required|boolean',
                     'drinker' => 'required|string|in:None,Occasionally,Often',
                     'education' => 'required|string|max:255',
@@ -152,8 +154,8 @@ class AuthController extends Controller
                     'ethnicity' => json_encode($request->ethnicity),
                     'height' => $request->heightFeet,
                     'inches' => $request->heightInches,
-                    'maritalstatus' => $request->maritalStatus,
-                    'children' => $request->children,
+                    'maritalstatus' => json_encode($request->maritalStatus),
+                    'children' => json_encode($request->children),
                     'religion' => json_encode($request->religion),
                     'smoker' => $request->smoker ? '1' : '0',
                     'drinker' => $request->drinker,

@@ -562,7 +562,7 @@
           </div>
           <div class="flex gap-5">
             <div class="flex-1">
-            <select-option
+            <MultiSelectOption
               label="Marital Status"
               :options="maritalStatuses"
               v-model="form.seeking_marital_status"
@@ -763,13 +763,10 @@ export default {
         seeking_body_type: [],
       },
       errors: {},
-      // countries: countries, // Use the imported countries array
       countries: countries,
       filteredCountries: countries.map(country => country.name), // For search functionality
       filteredStates: [], // Initially empty, will be populated based on selected country
       filteredCities: [], // Initially empty, will be populated based on selected state
-
-
       genders: ['Male', 'Female', 'Other'],
       bodyTypes: ['Slender', 'Average', 'Athletic', 'Curvy', 'Big and Beautiful'],
       maritalStatuses: ['Single', 'Separated', 'Divorced', 'Married', 'Widowed'],
@@ -1231,8 +1228,18 @@ export default {
         });
         formData.append('heightFeet', this.form.heightFeet);
         formData.append('heightInches', this.form.heightInches);
-        formData.append('maritalStatus', this.form.maritalStatus);
-        formData.append('children', this.form.children);
+        // formData.append('maritalStatus', this.form.maritalStatus);
+        // formData.append('children', this.form.children);
+        formData.append('maritalStatus', JSON.stringify(this.form.maritalStatus));
+        formData.append('children', JSON.stringify(this.form.children));
+        // this.form.maritalStatus.forEach((status, index) => {
+        //   formData.append(`maritalStatus[${index}]`, status);
+        // });
+
+        // this.form.children.forEach((child, index) => {
+        //   formData.append(`children[${index}]`, child);
+        // });
+
         this.form.religion.forEach(item => {
           formData.append('religion[]', item); // Append directly without JSON.stringify
         });
@@ -1244,8 +1251,8 @@ export default {
         formData.append('sports', this.form.sports);
         formData.append('hobbies', this.form.hobbies);
         this.form.languages.forEach((item, index) => {
-          formData.append(`languages[${index}][language]`, item.language[index]);
-          formData.append(`languages[${index}][level]`, item.level[index]);
+          formData.append(`languages[${index}][language]`, item.language); // Append the language
+          formData.append(`languages[${index}][level]`, item.level);     // Append the level
         });
         formData.append('seeking', this.form.seeking); // Add this line
         formData.append('min_age', this.form.min_age); 
@@ -1414,48 +1421,47 @@ export default {
     }
   },
   watch: {
-  // Watch for changes in selected country to reset filtered states and cities
-  'form.country'(newCountry) {
-    const country = this.countries.find(c => c.name === newCountry);
-    if (country) {
-      console.log('New country:', newCountry);
-      this.form.state = null; // Reset selected state when country changes
-      this.form.city = null; // Reset selected city when country changes
-      this.filteredStates = country.states.map(state => state.name);
-      this.filteredCities = []; // Clear cities when country changes
-    } else {
-      this.filteredStates = [];
-      this.filteredCities = [];
-    }
-  },
+    // Watch for changes in selected country to reset filtered states and cities
+    'form.country'(newCountry) {
+      const country = this.countries.find(c => c.name === newCountry);
+      if (country) {
+        console.log('New country:', newCountry);
+        this.form.state = null; // Reset selected state when country changes
+        this.form.city = null; // Reset selected city when country changes
+        this.filteredStates = country.states.map(state => state.name);
+        this.filteredCities = []; // Clear cities when country changes
+      } else {
+        this.filteredStates = [];
+        this.filteredCities = [];
+      }
+    },
 
-  // Watch for changes in selected state to reset filtered cities
-  'form.state'(newState) {
-    if (!this.form.country) return;
+    // Watch for changes in selected state to reset filtered cities
+    'form.state'(newState) {
+      if (!this.form.country) return;
 
-    const country = this.countries.find(c => c.name === this.form.country);
-    if (!country) return;
+      const country = this.countries.find(c => c.name === this.form.country);
+      if (!country) return;
 
-    const state = country.states.find(s => s.name === newState);
-    if (state) {
-      console.log('New state:', newState);
+      const state = country.states.find(s => s.name === newState);
+      if (state) {
+        console.log('New state:', newState);
 
-      this.form.city = null; // Reset selected city when state changes
-      this.filteredCities = state.cities;
-    } else {
-      this.filteredCities = [];
-    }
-  },
+        this.form.city = null; // Reset selected city when state changes
+        this.filteredCities = state.cities;
+      } else {
+        this.filteredCities = [];
+      }
+    },
 
-  // Watch for changes in selected city
-  'form.city'(newCity) {
-    if (newCity) {
-      // You can perform any additional actions or logic when a city is selected
-      console.log(`New city: ${newCity}`);
-    }
-  },
-}
-
+    // Watch for changes in selected city
+    'form.city'(newCity) {
+      if (newCity) {
+        // You can perform any additional actions or logic when a city is selected
+        console.log(`New city: ${newCity}`);
+      }
+    },
+  }
 };
 </script>
 

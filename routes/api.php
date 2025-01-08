@@ -72,7 +72,7 @@ Route::get('post/featured', [PostsController::class, 'featured']);
 // Profile Routes
 Route::middleware('auth:api')->prefix('profile')->group(function () {
     Route::controller(ProfileController::class)->group(function () {
-        Route::put('update', 'updateprofile');
+        // Route::put('update', 'updateprofile');
         Route::get('getprofile', 'getprofile');
         Route::get('getdetail/{username}', 'getdetail');
         Route::get('images', 'profileimages');
@@ -185,7 +185,7 @@ Route::put('/matchmaker/clients/{clientId}', [ClientController::class, 'updateCl
     
     
 Route::middleware(['auth:api'])->group(function () {
-    Route::put('/profile/updateprofile', [ProfileController::class, 'updateprofile']);
+    Route::post('/profile/updateprofile', [ProfileController::class, 'updateprofile']);
     Route::post('/profile/uploadimage', [ProfileController::class, 'uploadimage']);
     Route::get('/profile/getprofile', [ProfileController::class, 'getprofile']);
     Route::get('/profile/getimages', [ProfileController::class, 'getimages']);

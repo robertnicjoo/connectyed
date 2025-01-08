@@ -20,6 +20,55 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // public function updateprofile(Request $request)
+    // {
+    //     $user = Auth::user();
+        
+    //     // Validate the request
+    //     $request->validate([
+    //         'profile.name' => 'required|string|max:255',
+    //         'profile.city' => 'nullable|string|max:255',
+    //         'profile.state' => 'nullable|string|max:255',
+    //         'profile.country' => 'nullable|string|max:255',
+    //         'profile.yearsexperience' => 'nullable|numeric',
+    //         'profile.bio' => 'nullable|string',
+    //         'profile.jobtitle' => 'nullable|string|max:255',
+    //     ]);
+
+    //     // Update user details - only if name is provided
+    //     if ($request->has('profile.name')) {
+    //         $user->name = $request->input('profile.name');
+    //         $user->save();
+    //     }
+
+    //     // Update profile details
+    //     $profile = Profile::where('user_id', $user->id)->first();
+        
+    //     if (!$profile) {
+    //         $profile = new Profile();
+    //         $profile->user_id = $user->id;
+    //     }
+
+    //     // Update only the fields that are present in the request
+    //     $fields = [
+    //         'name', 'city', 'state', 'country', 'yearsexperience',
+    //         'jobtitle', 'bio', 'profile_image1', 'profile_image2'
+    //     ];
+
+    //     foreach ($fields as $field) {
+    //         if ($request->has("profile.$field")) {
+    //             $profile->$field = $request->input("profile.$field");
+    //         }
+    //     }
+
+    //     $profile->save();
+
+    //     return response()->json([
+    //         "success" => true,
+    //         "data" => $profile,
+    //         "message" => 'Profile updated successfully'
+    //     ], 200);
+    // }
     public function updateprofile(Request $request)
     {
         $user = Auth::user();
@@ -33,6 +82,12 @@ class ProfileController extends Controller
             'profile.yearsexperience' => 'nullable|numeric',
             'profile.bio' => 'nullable|string',
             'profile.jobtitle' => 'nullable|string|max:255',
+            'profile.languages' => 'nullable|array', // Validation for languages
+            'profile.languages.*' => 'nullable', // Each language should be a string
+            'profile.bodytype' => 'nullable|array', // Validation for bodytype
+            'profile.bodytype.*' => 'nullable|string', // Each body type should be a string
+            'profile.religion' => 'nullable|array', // Validation for religion
+            'profile.religion.*' => 'nullable|string', // Each body type should be a string
         ]);
 
         // Update user details - only if name is provided
@@ -52,12 +107,20 @@ class ProfileController extends Controller
         // Update only the fields that are present in the request
         $fields = [
             'name', 'city', 'state', 'country', 'yearsexperience',
-            'jobtitle', 'bio', 'profile_image1', 'profile_image2'
+            'jobtitle', 'bio', 'profile_image1', 'profile_image2', 
+            'languages', 'bodytype', 'children', 'maritalstatus',
         ];
 
         foreach ($fields as $field) {
             if ($request->has("profile.$field")) {
-                $profile->$field = $request->input("profile.$field");
+                $value = $request->input("profile.$field");
+
+                // Convert languages and bodytype to JSON
+                if ($field == 'languages' || $field == 'bodytype' || $field == 'religion') {
+                    $profile->$field = json_encode($value);
+                } else {
+                    $profile->$field = $value;
+                }
             }
         }
 

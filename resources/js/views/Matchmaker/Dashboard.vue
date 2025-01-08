@@ -20,7 +20,7 @@
                                 @click="logout"
                                 class="block w-full text-left px-4 py-3 hover:bg-[#333333] hover:text-white transition-colors duration-200"
                             >
-                                <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="w-5 h-5 mr-4" />
+                                <font-awesome-icon :icon="faRightFromBracket" class="w-5 h-5 mr-4" />
                                 <span>Logout</span>
                             </button>
                         </li>
@@ -38,7 +38,7 @@
 </template>
   
 <script>
-import { faTachometerAlt, faUser, faBriefcase, faUsers, faDollarSign, faEnvelope, faTasks, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faUser, faBriefcase, faUsers, faDollarSign, faEnvelope, faTasks, faCalendar, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
@@ -64,6 +64,7 @@ export default {
     },
     data() {
         return {
+            faRightFromBracket,
             menuItems: [
                 { title: "Dashboard", icon: faTachometerAlt, link: "/dashboard" },        
                 { title: "My Profile", icon: faUser, link: "/profile" },

@@ -30,10 +30,10 @@
             <div
               v-for="matchmaker in matchmakers"
               :key="matchmaker.id"
-              class="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 transition duration-200"
+              class="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 transition duration-200 flex flex-col"
             >
               <h4 class="font-bold text-md mb-1">{{ matchmaker.name }}</h4>
-              <p class="text-sm text-gray-600 mb-2">{{ matchmaker.email }}</p>
+              <p class="text-sm text-gray-600 mb-2 break-words flex-grow">{{ matchmaker.email }}</p>
               <button
                 @click="selectMatchmaker(matchmaker)"
                 :disabled="selectedMatchmaker && selectedMatchmaker.id === matchmaker.id"

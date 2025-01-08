@@ -62,7 +62,9 @@ class Profile extends Model
         'inches' => 'integer',
         'bodytype' => 'array',
         'religion' => 'array',
-        'ethnicity' => 'array',        
+        'ethnicity' => 'array',
+        'children' => 'array',
+        'maritalstatus' => 'array',
     ];
 
     /**

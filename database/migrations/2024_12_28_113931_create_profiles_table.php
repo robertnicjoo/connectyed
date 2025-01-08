@@ -28,8 +28,8 @@ return new class extends Migration
             $table->integer('height')->nullable(); // No auto-increment here
             $table->integer('inches')->nullable(); // No auto-increment here
             $table->string('haircolor', 50)->nullable();
-            $table->string('maritalstatus', 50)->nullable();
-            $table->integer('children')->nullable(); // No auto-increment here
+            $table->json('maritalstatus')->nullable();
+            $table->json('children')->nullable(); // No auto-increment here
             $table->json('religion')->nullable();
             $table->tinyInteger('smoker')->nullable(); // No auto-increment here
             $table->string('drinker', 20)->nullable();
