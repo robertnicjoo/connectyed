@@ -74,7 +74,7 @@ class AdminController extends Controller
      */
     public function getClients()
     {
-        $clients = User::with('profile')
+        $clients = User::with(['profile', 'seeking'])
                        ->where('role', 'client')
                        ->get();        
 

@@ -29,9 +29,10 @@
 
     <!-- Modal Section -->
     <div v-if="showModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+      <div 
+        class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full overflow-y-auto"
+        style="max-height: 90vh;">
         <h2 class="text-xl font-semibold">{{ selectedClient.name }}'s Information</h2>
-        <!-- { "id": 44, "name": "rebeca", "username": "souza", "email": "rebecasouzasilva345@gmail.com", "email_verified_at": "2024-09-13T14:06:05.000000Z", "role": "client", "avatar": null, "google_token_expires_at": null, "created_at": "2024-09-13T14:04:16.000000Z", "updated_at": "2025-01-09T03:07:14.000000Z", "purchased_package": null, "criteria_limit": 0, "package_purchased_at": null, "criteria": null, "profile": { "id": 36, "user_id": 44, "name": "rebeca", "matchmaker_id": null, "city": "", "state": "", "country": "", "location": null, "age": 0, "gender": null, "bodytype": null, "ethnicity": null, "height": null, "inches": 0, "haircolor": null, "maritalstatus": null, "children": null, "religion": null, "smoker": null, "drinker": null, "education": null, "occupation": null, "yearsexperience": null, "jobtitle": null, "sports": null, "hobbies": null, "languages": null, "bio": null, "profile_image1": null, "profile_image2": null, "created_at": "2024-09-13T14:04:16.000000Z", "updated_at": "2024-09-13T14:04:16.000000Z" } }  -->
         <p><strong>Username:</strong> {{ selectedClient.username }}</p>
         <p><strong>Email:</strong> {{ selectedClient.email }}</p>
         <p><strong>Joined At:</strong> {{ selectedClient.created_at }}</p>
@@ -41,6 +42,21 @@
         <p><strong>City:</strong> {{ selectedClient.profile.city }}</p>
         <p><strong>Age:</strong> {{ selectedClient.profile.age }}</p>
         <p><strong>Children:</strong> {{ selectedClient.profile.children }}</p>
+        ---
+        <div v-if="selectedClient.seeking !== null">
+          <p>
+            I’m seeking a {{ selectedClient.seeking.gender }} between ages {{ selectedClient.seeking.min_age }} to {{ selectedClient.seeking.max_age }} in {{ selectedClient.seeking.location }} with following details:
+            <br> <strong>Ethnicities:</strong> {{ selectedClient.seeking.ethnicity ? selectedClient.seeking.ethnicity.join(', ') : 'N/A' }}
+            <br> <strong>Children:</strong> {{ selectedClient.seeking.current_kids_number || 'N/A' }}
+            <br> <strong>Wants kids:</strong> {{ selectedClient.seeking.desired_kids_number || 'N/A' }}
+            <br> <strong>Hair Color:</strong> {{ selectedClient.seeking.haircolor || 'N/A' }}
+            <br> <strong>Body Type:</strong> {{ selectedClient.seeking.bodytype ? selectedClient.seeking.bodytype.join(', ') : 'N/A' }}
+            <br> <strong>Religion:</strong> {{ selectedClient.seeking.religion ? selectedClient.seeking.religion.join(', ') : 'N/A' }}
+            <br> <strong>Smoker:</strong> {{ selectedClient.seeking.smoker === 'Yes' || selectedClient.seeking.smoker === true ? 'Yes' : 'No' }}
+            <br> <strong>Drinker:</strong> {{ selectedClient.seeking.drinker }} 
+            <br> <strong>Marital Status:</strong> {{ selectedClient.seeking.maritalstatus }}
+          </p>
+        </div>
         <p><strong>Verification Status:</strong> {{ selectedClient.email_verified_at ? 'Verified' : 'Not Verified' }}</p>
         <button @click="closeModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Close</button>
       </div>
