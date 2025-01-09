@@ -341,14 +341,14 @@
       <div v-if="currentStep === 4 && !form.ismatchmaker">
         <h3 class="font-semibold text-lg mb-4">Lifestyle Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
-          <select-option
+          <MultiSelectOption
             label="Marital Status"
             :options="maritalStatuses"
             v-model="form.maritalStatus"
             :required="true"
             :error="errors.maritalStatus"
           />
-          <select-option
+          <MultiSelectOption
             label="Children"
             :options="childrenOptions"
             v-model="form.children"
@@ -521,9 +521,9 @@
           <select-option
             label="Current Kid(s)"
             :options="childrenOptions"
-            v-model="form.children"
+            v-model="form.current_kids_number"
             :required="true"
-            :error="errors.children"
+            :error="errors.current_kids_number"
           />
           <select-option
             label="Desired Kid(s)"
@@ -733,8 +733,8 @@ export default {
         ethnicity: [],
         heightFeet: "",
         heightInches: "",
-        maritalStatus: "",
-        children: "",
+        maritalStatus: [],
+        children: [],
         smoker: false, // Initialized as boolean
         drinker: "",
         education: "",
@@ -751,6 +751,7 @@ export default {
         seeking: "", //New field for seeking 
         min_age: "",
         max_age: "",
+        current_kids_number:"",
         desired_children:"",
         seeking_location: "",
         seeking_hair_color: "",
@@ -1104,8 +1105,8 @@ export default {
               this.errors.age = 'Please enter a valid maximum age between 18 and 100';
               hasError = true;
             }
-            if (this.form.children === '' || this.form.children === null) {
-              this.errors.children = 'Current Children is required';
+            if (this.form.current_kids_number === '' || this.form.current_kids_number === null) {
+              this.errors.current_kids_number = 'Current Children is required';
               hasError = true;
             }
             if (this.form.desired_children === '' || this.form.desired_children === null) {
@@ -1267,8 +1268,12 @@ export default {
         formData.append('heightInches', this.form.heightInches);
         // formData.append('maritalStatus', this.form.maritalStatus);
         // formData.append('children', this.form.children);
-        formData.append('maritalStatus', JSON.stringify(this.form.maritalStatus));
-        formData.append('children', JSON.stringify(this.form.children));
+        this.form.maritalStatus.forEach((status) => {
+          formData.append('maritalStatus[]', status);
+        });
+        this.form.children.forEach((child) => {
+          formData.append('children[]', child);
+        });
         // this.form.maritalStatus.forEach((status, index) => {
         //   formData.append(`maritalStatus[${index}]`, status);
         // });
@@ -1294,6 +1299,7 @@ export default {
         formData.append('seeking', this.form.seeking); // Add this line
         formData.append('min_age', this.form.min_age); 
         formData.append('max_age', this.form.max_age); 
+        formData.append('current_kids_number', this.form.current_kids_number); 
         formData.append('desired_children', this.form.desired_children); 
         formData.append('seeking_location', this.form.seeking_location); 
         formData.append('seeking_hair_color', this.form.seeking_hair_color); 

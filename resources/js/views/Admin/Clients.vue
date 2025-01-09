@@ -31,6 +31,7 @@
     <div v-if="showModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
         <h2 class="text-xl font-semibold">{{ selectedClient.name }}'s Information</h2>
+        <!-- { "id": 44, "name": "rebeca", "username": "souza", "email": "rebecasouzasilva345@gmail.com", "email_verified_at": "2024-09-13T14:06:05.000000Z", "role": "client", "avatar": null, "google_token_expires_at": null, "created_at": "2024-09-13T14:04:16.000000Z", "updated_at": "2025-01-09T03:07:14.000000Z", "purchased_package": null, "criteria_limit": 0, "package_purchased_at": null, "criteria": null, "profile": { "id": 36, "user_id": 44, "name": "rebeca", "matchmaker_id": null, "city": "", "state": "", "country": "", "location": null, "age": 0, "gender": null, "bodytype": null, "ethnicity": null, "height": null, "inches": 0, "haircolor": null, "maritalstatus": null, "children": null, "religion": null, "smoker": null, "drinker": null, "education": null, "occupation": null, "yearsexperience": null, "jobtitle": null, "sports": null, "hobbies": null, "languages": null, "bio": null, "profile_image1": null, "profile_image2": null, "created_at": "2024-09-13T14:04:16.000000Z", "updated_at": "2024-09-13T14:04:16.000000Z" } }  -->
         <p><strong>Username:</strong> {{ selectedClient.username }}</p>
         <p><strong>Email:</strong> {{ selectedClient.email }}</p>
         <p><strong>Joined At:</strong> {{ selectedClient.created_at }}</p>

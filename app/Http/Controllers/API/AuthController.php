@@ -172,7 +172,7 @@ class AuthController extends Controller
                 'min_age' => $request->min_age,
                 'max_age' => $request->max_age,
                 'location' => $request->seeking_location,
-                'current_kids_number' => $request->children,
+                'current_kids_number' => $request->current_kids_number,
                 'desired_kids_number' => $request->desired_children,
                 'gender' => $request->seeking_gender,
                 'bodytype' => json_encode($request->seeking_body_type),
