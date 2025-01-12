@@ -217,14 +217,6 @@
             :error="errors.city"
             @change="handleCitySearch(form.city)"
           />
-
-          <input-text
-            label="Current Location (City)"
-            v-model="form.currentLocation"
-            :required="true"
-            :error="errors.currentLocation"
-            maxlength="100"
-          />
         </div>
       </div>
 
@@ -260,18 +252,26 @@
             :error="errors.city"
             @change="handleCitySearch(form.city)"
           />
-          <input-text
-            label="Current Location (City)"
-            v-model="form.currentLocation"
-            :required="true"
-            :error="errors.currentLocation"
-            maxlength="100"
-          />
         </div>
       </div>
 
       <!-- Step 3: Personal Information (Clients Only) -->
       <div v-if="currentStep === 3 && !form.ismatchmaker">
+        <!-- Profile Image 1 -->
+        <div class="mb-4">
+          <label class="block text-gray-700">
+            Upload Profile Image 1 <span class="text-red-500">*</span>
+          </label>
+          <input type="file" @change="onFileChange($event, 'profile_image1')" accept="image/*" required />
+          <p v-if="errors.profile_image1" class="text-red-500 text-xs italic">{{ errors.profile_image1 }}</p>
+        </div>
+
+        <!-- Profile Image 2 -->
+        <div class="mb-4">
+          <label class="block text-gray-700">Upload Profile Image 2</label>
+          <input type="file" @change="onFileChange($event, 'profile_image2')" accept="image/*" required />
+          <p v-if="errors.profile_image2" class="text-red-500 text-xs italic">{{ errors.profile_image2 }}</p>
+        </div>
         <h3 class="font-semibold text-lg mb-4">Personal Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
           <input-text
@@ -514,7 +514,7 @@
             label="Location"
             v-model="form.seeking_location"
             :required="true"
-            :error="errors.currentLocation"
+            :error="errors.seeking_location"
             maxlength="100"
           />
         <div class="flex gap-5">
@@ -724,7 +724,6 @@ export default {
         city: "",
         state: "",
         country: "",
-        currentLocation: "",
         age: "",
         gender: "",
         hairColor: "",
@@ -819,7 +818,7 @@ export default {
     }),
     addGlobalMetaTags() {
       // Set the title
-      document.title = "Register | Premium Matchmaking for Busy Professionals";
+      document.title = "Register | Premium Matchmaking at Affordable Prices";
 
       // Add meta description
       const description = document.createElement("meta");
@@ -830,7 +829,7 @@ export default {
       // Add Open Graph tags for social sharing
       const ogTitle = document.createElement("meta");
       ogTitle.setAttribute("property", "og:title");
-      ogTitle.setAttribute("content", "Register | Premium Matchmaking for Busy Professionals");
+      ogTitle.setAttribute("content", "Register | Premium Matchmaking at Affordable Prices");
       document.head.appendChild(ogTitle);
 
 
@@ -928,6 +927,10 @@ export default {
               this.errors.profile_image1 = 'Profile Image 1 is required';
               hasError = true;
             }
+            if (!this.files.profile_image2) {
+              this.errors.profile_image2 = 'Profile Image 2 is required';
+              hasError = true;
+            }
             if (!this.form.age) {
               this.errors.age = 'Age is required';
               hasError = true;
@@ -960,10 +963,6 @@ export default {
               this.errors.country = 'Country is required';
               hasError = true;
             }
-            if (!this.form.currentLocation) {
-              this.errors.currentLocation = 'Current Location is required';
-              hasError = true;
-            }
           }
           break;
 
@@ -982,11 +981,17 @@ export default {
               this.errors.country = 'Country is required';
               hasError = true;
             }
-            if (!this.form.currentLocation) {
-              this.errors.currentLocation = 'Current Location is required';
+          } else {
+            // Matchmaker Registration Step 2: Profile Images & Basic Info
+            if (!this.files.profile_image1) {
+              this.errors.profile_image1 = 'Profile Image 1 is required';
               hasError = true;
             }
-          } else {
+            // Matchmaker Registration Step 2: Profile Images & Basic Info
+            if (!this.files.profile_image2) {
+              this.errors.profile_image2 = 'Profile Image 2 is required';
+              hasError = true;
+            }
             // Client Registration Step 3: Personal Information
             if (!this.form.age) {
               this.errors.age = 'Age is required';
@@ -1217,10 +1222,24 @@ export default {
       this.isModalOpen = false;
       this.pdfUrl = '';
     },
-    onFileChange(event, imageField) {
+    onFileChange(event, fieldName) {
       const file = event.target.files[0];
-      this.files[imageField] = file;
+      console.log('fieldName:', fieldName);
+      console.log('file:', file);
+      if (file) {
+        this.files[fieldName] = file;
+        console.log('file data:', this.files[fieldName]);
+
+        this.errors[fieldName] = ''; // Clear any existing error for this field
+      } else {
+        this.errors[fieldName] = 'This field is required.';
+      }
     },
+
+    // onFileChange(event, imageField) {
+    //   const file = event.target.files[0];
+    //   this.files[imageField] = file;
+    // },
     async register() {
       this.processing = true;
       this.clearErrors();
@@ -1251,7 +1270,6 @@ export default {
       formData.append('city', this.form.city);
       formData.append('state', this.form.state);
       formData.append('country', this.form.country);
-      formData.append('currentLocation', this.form.currentLocation);
       formData.append('age', this.form.age);
 
       if (!this.form.ismatchmaker) {
@@ -1274,14 +1292,6 @@ export default {
         this.form.children.forEach((child) => {
           formData.append('children[]', child);
         });
-        // this.form.maritalStatus.forEach((status, index) => {
-        //   formData.append(`maritalStatus[${index}]`, status);
-        // });
-
-        // this.form.children.forEach((child, index) => {
-        //   formData.append(`children[${index}]`, child);
-        // });
-
         this.form.religion.forEach(item => {
           formData.append('religion[]', item); // Append directly without JSON.stringify
         });
@@ -1309,21 +1319,19 @@ export default {
         formData.append('seeking_religion', this.form.seeking_religion); 
         formData.append('seeking_smoker', this.form.seeking_smoker); 
         formData.append('seeking_drinker', this.form.seeking_drinker);
-        formData.append('seeking_ethnicity', this.form.seeking_ethnicity); 
-      }
-
-      // Append matchmaker specific fields
-      if (this.form.ismatchmaker) {
-        formData.append('yearsexperience', this.form.yearsexperience);
-        formData.append('bio', this.form.bio);
-        
-        // Append files
+        formData.append('seeking_ethnicity', this.form.seeking_ethnicity);
         if (this.files.profile_image1) {
           formData.append('profile_image1', this.files.profile_image1);
         }
         if (this.files.profile_image2) {
           formData.append('profile_image2', this.files.profile_image2);
         }
+      }
+
+      // Append matchmaker specific fields
+      if (this.form.ismatchmaker) {
+        formData.append('yearsexperience', this.form.yearsexperience);
+        formData.append('bio', this.form.bio);
       }
 
       try {
@@ -1387,7 +1395,6 @@ export default {
         city: 'City',
         state: 'State',
         country: 'Country',
-        currentLocation: 'Current Location',
         age: 'Age',
       };
 

@@ -1,40 +1,50 @@
 <template>
-    <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 items-center justify-center">
-        <div class="mx-full shadow-connectyed rounded-xl bg-connectyed-card-mm-light flex flex-col mb-5">             
-            <div class="flex rounded-xl">
-                <!-- Sidebar -->
-                <aside class="w-72 bg-connectyed-sidenav-light text-connectyed-icon rounded-l-xl">
-                    <nav class="mt-10">
-                    <ul>
-                        <li v-for="item in menuItems" :key="item.title" class="mb-1">
-                        <router-link :to="'/matchmaker' + item.link"                            
-                            class="flex items-center p-4 text-gray-300 hover:hover:bg-connectyed-card-mm-light hover:text-connectyed-textnav-dark transition-colors duration-200"
-                            active-class="bg-connectyed-card-mm-light text-gray-900"
-                        >
-                            <font-awesome-icon :icon="item.icon" class="w-5 h-5 mr-4" />
-                            <span>{{ item.title }}</span>
-                        </router-link>
-                        </li>
-                        <li class="mb-1">
-                            <button
-                                @click="logout"
-                                class="block w-full text-left px-4 py-3 hover:bg-[#333333] hover:text-white transition-colors duration-200"
-                            >
-                                <font-awesome-icon :icon="faRightFromBracket" class="w-5 h-5 mr-4" />
-                                <span>Logout</span>
-                            </button>
-                        </li>
-                    </ul>
-                    </nav>
-                </aside>
-            
-                <!-- Main Content -->
-                <div class="flex-1 p-6">
-                    <router-view />
-                </div>
-            </div>            
+    <div class="flex min-h-screen bg-gray-100">
+    <!-- Sidebar Navigation Menu -->
+    <div class="hidden md:block h-screen w-64 bg-[#213366] text-[#e7dccf]">
+      <aside
+      class="
+          w-64 bg-[#213366] text-[#e7dccf] flex flex-col fixed md:relative z-50 transition-transform duration-300
+        "
+      >
+        <!-- Profile Section -->
+        <div class="flex items-center p-4 bg-[#333333] text-white">
+          <img
+            v-if="profile && profile.avatar"
+            :src="profile.avatar"
+            alt="Profile Picture"
+            class="w-12 h-12 rounded-full object-cover mr-3"
+          />
+          <div>
+            <h2 class="text-lg font-semibold text-connectyed-button-light">
+              {{ user && user.name ? user.name : 'Guest' }}
+            </h2>
+            <p class="text-sm text-[#e7dccf]">Matchmaker</p>
+          </div>
         </div>
-    </div>   
+
+        <!-- Navigation Links -->
+        <ul class="nnax flex-1 mt-6">
+          <li v-for="item in menuItems" :key="item.title" class="mb-1">
+            <router-link
+              :to="'/matchmaker' + item.link"
+              class="block px-4 py-3 text-white hover:bg-[#e7dccf] hover:text-custom transition-colors duration-200"
+              active-class="bg-[#e7dccf] text-custom"
+            >
+              <font-awesome-icon :icon="item.icon" class="w-5 h-5 mr-4" />
+              <span>{{ item.title }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 bg-[#e7dccf]">
+      <!-- Router View Placeholder -->
+      <router-view />
+    </main>
+  </div> 
 </template>
   
 <script>
@@ -45,22 +55,6 @@ export default {
     name:"matchmaker",
     components: {
         FontAwesomeIcon
-    },
-    methods: {
-        async logout() {
-        try {
-            const response = await axios.post('/api/user/logout', {}, {
-            headers: {
-                Authorization: `Bearer ${this.authorization}`,
-            },
-            });
-            this.$store.dispatch('auth/logout'); // Update Vuex state
-            this.$router.push('/'); // Redirect to the login page
-            console.log(response.data.message);
-        } catch (error) {
-            console.error('Logout failed:', error.response ? error.response.data : error.message);
-        }
-        },
     },
     data() {
         return {
@@ -77,5 +71,27 @@ export default {
             ]
         };
     },
+    computed: {
+        user() {
+        return this.$store.state.auth.user;
+        },
+        profile() {
+        return this.$store.state.auth.profile;
+        },
+    }
 };
 </script>
+
+<style scoped>
+.router-link-active {
+  background-color: #e7dccf;
+  color: #213366;
+}
+.text-custom {
+  color: #213366 !important;
+}
+.nnax a:hover {
+  background-color: #e7dccf !important;
+  color: #213366 !important;
+}
+</style>

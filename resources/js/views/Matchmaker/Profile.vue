@@ -150,11 +150,19 @@
         </button>
       </div>
     </form>
+    <div>
+      <hr class="mt-5">
+      <NewPassword 
+        :email="profile.email" 
+        :token="authorization.token" 
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import NewPassword from '../NewPassword.vue';
 
 export default {
   data() {
@@ -167,6 +175,7 @@ export default {
         yearsexperience: '',
         jobtitle: '',
         bio: '',
+        email: '',
         profile_image1: '',
         profile_image2: '',
       },
@@ -177,6 +186,9 @@ export default {
   
   mounted() {
     this.getProfile()
+  },
+  components: {
+    NewPassword,
   },
 
   methods: {
@@ -239,6 +251,7 @@ export default {
           this.profile = {
             ...response.data.data,
             name: response.data.data.name || response.data.data.user.name,
+            email: response.data.data.email || response.data.data.user.email,
           }
         }
       } catch (error) {

@@ -315,7 +315,12 @@ class GoogleMeetController extends Controller
 
                 // Notify the matchmaker
                 $authUser->notify(new MeetingScheduledNotification($newMeeting));
-                return response()->json(['status'=> true , 'message' => "Meeting Scheduled Successfully. Please Check Your Inbox For JOINING LINK"]);
+                return response()->json([
+                    'status'=> true , 
+                    'message' => "Meeting Scheduled Successfully. Please Check Your Inbox For JOINING LINK",
+                    "data" => $clientMeetingData,
+                    "link" => $newMeeting,
+                ]);
             }
         } else {
             return response()->json([
@@ -326,7 +331,7 @@ class GoogleMeetController extends Controller
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500 , 'message' => "Something went wrong" . $e->getMessage()]);
+            return response()->json(['status' => 500 , 'message' => "Something went wrong: " . $e->getMessage()]);
         }
     }
 
@@ -728,7 +733,7 @@ class GoogleMeetController extends Controller
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500 , 'message' => "Something went wrong" . $e->getMessage()]);
+            return response()->json(['status' => 500 , 'message' => "Something went wrong: " . $e->getMessage()]);
         }
     }
 }

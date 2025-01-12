@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('city', 100);
             $table->string('state', 100);
             $table->string('country', 100);
-            $table->string('location', 100)->nullable();
             $table->integer('age'); // No auto-increment here
             $table->string('gender', 25)->nullable();
             $table->json('bodytype')->nullable();
@@ -40,8 +39,8 @@ return new class extends Migration
             $table->text('hobbies')->nullable();
             $table->json('languages')->nullable()->change(); //
             $table->text('bio')->nullable();
-            $table->string('profile_image1', 255)->nullable();
-            $table->string('profile_image2', 255)->nullable();
+            $table->string('profile_image1');
+            $table->string('profile_image2');
             $table->string('occupation', 150)->nullable();
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ export default {
   methods: {
     addGlobalMetaTags() {
       // Set the title
-      document.title = "Connectyed | Premium Matchmaking for Busy Professionals";
+      document.title = "Connectyed | Premium Matchmaking at Affordable Prices";
 
       // Add meta description
       const description = document.createElement("meta");
@@ -26,7 +26,7 @@ export default {
       // Add Open Graph tags for social sharing
       const ogTitle = document.createElement("meta");
       ogTitle.setAttribute("property", "og:title");
-      ogTitle.setAttribute("content", "Comnectyed | Premium Matchmaking for Busy Professionals");
+      ogTitle.setAttribute("content", "Comnectyed | Premium Matchmaking at Affordable Prices");
       document.head.appendChild(ogTitle);
 
 

@@ -17,7 +17,6 @@ class Profile extends Model
         'city',
         'state',
         'country',
-        'location',
         'age',
         'gender',
         'bodytype', //multiple

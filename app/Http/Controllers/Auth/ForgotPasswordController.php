@@ -11,6 +11,7 @@ use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Validator;
 
 class ForgotPasswordController extends Controller
 {
@@ -47,22 +48,30 @@ class ForgotPasswordController extends Controller
 
     public function reset(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'token' => 'required',
-            'password' => 'required|confirmed|min:8',
+        // Validate the incoming data
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'token' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->password = Hash::make($password);
-                $user->save();
-            }
-        );
+        // If validation fails, return the error messages as JSON
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422); // 422 Unprocessable Entity for validation errors
+        }
+        // Validation passed, process the password reset
+        // Example: Reset the password logic
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(['message' => 'Invalid token or email.'], 400);
+        }
 
-        return $status === Password::PASSWORD_RESET
-            ? response()->json(['message' => 'Password reset successfully.'])
-            : response()->json(['message' => 'Failed to reset password.'], 500);
+        // Proceed with updating the password
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response()->json(['message' => 'Password reset successfully.']);
     }
 }

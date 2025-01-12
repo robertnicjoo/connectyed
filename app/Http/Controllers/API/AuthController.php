@@ -42,7 +42,6 @@ class AuthController extends Controller
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:255',
                 'country' => 'required|string|max:255',
-                'currentLocation' => 'required|string|max:255',
             ]);
 
             if ($validator->fails()) {
@@ -70,7 +69,6 @@ class AuthController extends Controller
                 'city' => $request->city,
                 'state' => $request->state,
                 'country' => $request->country,
-                'location' => $request->currentLocation,
                 'age' => $request->age, // Dynamic age assignment
             ];
 
@@ -78,7 +76,7 @@ class AuthController extends Controller
                 // Additional validation for matchmaker
                 $matchmakerValidator = Validator::make($request->all(), [
                     'profile_image1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                    'profile_image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                    'profile_image2' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                     'yearsexperience' => 'required|integer|min:0',
                     'bio' => 'required|string',
                 ]);
@@ -135,6 +133,8 @@ class AuthController extends Controller
                     "seeking_religion" => "required",
                     "seeking_smoker" => "required",
                     "seeking_drinker" => "required",
+                    'profile_image1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                    'profile_image2' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 ]);
 
                 if ($clientValidator->fails()) {

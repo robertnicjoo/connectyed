@@ -20,7 +20,7 @@
     methods: {
       addGlobalMetaTags() {
             // Set the title
-            document.title = "Not Found | Premium Matchmaking for Busy Professionals";
+            document.title = "Not Found | Premium Matchmaking at Affordable Prices";
 
             // Add meta description
             const description = document.createElement("meta");
@@ -31,7 +31,7 @@
             // Add Open Graph tags for social sharing
             const ogTitle = document.createElement("meta");
             ogTitle.setAttribute("property", "og:title");
-            ogTitle.setAttribute("content", "Not Found | Premium Matchmaking for Busy Professionals");
+            ogTitle.setAttribute("content", "Not Found | Premium Matchmaking at Affordable Prices");
             document.head.appendChild(ogTitle);
 
 

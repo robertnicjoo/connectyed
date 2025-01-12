@@ -108,10 +108,7 @@
                         <!-- You can expand this section with all the profile details as needed -->
                         <div class="flex flex-wrap mb-3">
                             <div class="w-full">
-                                <label class="text-gray-700 text-md font-medium">
-                                    Location:&ThickSpace;
-                                </label>
-                                <span>{{ profile.location || 'Your current location / City' }}</span>
+                                <label class="text-gray-700 text-lg font-semibold">Age: {{ profile.age }}</label>
                             </div>
                         </div>
                         <!-- Repeat similar blocks for other profile details -->
@@ -170,22 +167,6 @@
                             class="appearance-none block w-full border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                             @change="handleCitySearch(profile.city)"
                         />
-                        </div>
-                    </div>
-
-                    <!-- Current Location -->
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="location">
-                                Current Location (City)
-                            </label>
-                            <input
-                                class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                v-model="profile.location"
-                                id="location"
-                                type="text"
-                                required
-                            />
                         </div>
                     </div>
 
@@ -558,6 +539,14 @@
                         </button>
                     </div>
                 </form>
+                <div>
+                    <hr class="mt-5">
+                    <NewPassword 
+                        :email="profile.email" 
+                        :token="authorization.token"
+                        inputClass="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -565,6 +554,7 @@
 <script>
 // Import the countries array from countries.js
 import { countries } from '../../components/countries.js';
+import NewPassword from '../newPassword.vue';
 import MultiSelectOption from '../../components/MultiSelectOption.vue';
 import SelectOption from '../../components/SelectOption.vue';
 import axios from 'axios';
@@ -595,6 +585,7 @@ export default {
                 bio: '',
                 country: '',
                 state: '',
+                email: '',
                 city: '',
                 bodytype: [],
                 languages: [],
@@ -612,6 +603,7 @@ export default {
     components: {
         MultiSelectOption,
         SelectOption,
+        NewPassword,
     },
     computed: {
         // Access user and profile from Vuex store
@@ -693,6 +685,7 @@ export default {
                     // Set profile and user data
                     this.profile = response.data.data;
                     this.user = response.data.data.user;
+                    this.profile.email = this.user.email;
 
                     this.userCity = this.profile.city;
                     

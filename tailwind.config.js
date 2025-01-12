@@ -12,6 +12,9 @@ export default {
       boxShadow: {
         connectyed: '0 0 0 1px #e1e1e1',
       },
+      zIndex: {
+        '99999': '99999',
+      },
       colors: {
         'connectyed-header': {
           light: '#333333',

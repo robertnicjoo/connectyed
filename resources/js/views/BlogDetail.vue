@@ -69,7 +69,7 @@ export default {
         }),  
         addGlobalMetaTags() {
             // Set the title
-            document.title = "Billing | Premium Matchmaking for Busy Professionals";
+            document.title = "Billing | Premium Matchmaking at Affordable Prices";
 
             // Add meta description
             const description = document.createElement("meta");
@@ -80,7 +80,7 @@ export default {
             // Add Open Graph tags for social sharing
             const ogTitle = document.createElement("meta");
             ogTitle.setAttribute("property", "og:title");
-            ogTitle.setAttribute("content", "Billing | Premium Matchmaking for Busy Professionals");
+            ogTitle.setAttribute("content", "Billing | Premium Matchmaking at Affordable Prices");
             document.head.appendChild(ogTitle);
 
 

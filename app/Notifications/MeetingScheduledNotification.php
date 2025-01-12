@@ -38,7 +38,10 @@ class MeetingScheduledNotification extends Notification
     {
         return (new MailMessage)
                     ->subject('Meeting Scheduled Successfully')
-                    ->line('Your meeting has been scheduled.')
+                    ->line('Your meeting has been scheduled for:')
+                    ->line($this->meeting->start_time->format('d F, Y | h:i A'))
+                    ->line('Duration: ' . $this->meeting->duration. ' Minutes')
+                    ->line('Password: ' . $this->meeting->google_meet_password)
                     ->action('Join Meeting', $this->meeting->google_meet_link)
                     ->line('Thank you for using our application!');
     }

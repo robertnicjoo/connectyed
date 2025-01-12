@@ -37,7 +37,7 @@ export default {
     methods: {
         addGlobalMetaTags() {
             // Set the title
-            document.title = "Profile Details | Premium Matchmaking for Busy Professionals";
+            document.title = "Profile Details | Premium Matchmaking at Affordable Prices";
 
             // Add meta description
             const description = document.createElement("meta");
@@ -48,7 +48,7 @@ export default {
             // Add Open Graph tags for social sharing
             const ogTitle = document.createElement("meta");
             ogTitle.setAttribute("property", "og:title");
-            ogTitle.setAttribute("content", "Profile Details | Premium Matchmaking for Busy Professionals");
+            ogTitle.setAttribute("content", "Profile Details | Premium Matchmaking at Affordable Prices");
             document.head.appendChild(ogTitle);
 
 
