@@ -554,7 +554,7 @@
 <script>
 // Import the countries array from countries.js
 import { countries } from '../../components/countries.js';
-import NewPassword from '../newPassword.vue';
+import NewPassword from '../NewPassword.vue';
 import MultiSelectOption from '../../components/MultiSelectOption.vue';
 import SelectOption from '../../components/SelectOption.vue';
 import axios from 'axios';
