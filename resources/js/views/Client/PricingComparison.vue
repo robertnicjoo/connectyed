@@ -137,6 +137,14 @@ export default {
           gold: '8 days',
           platinum: '6 days',
         },
+        {
+          name: 'pricing',
+          displayName: 'Pricing',
+          explanation: '',
+          silver: 'Free',
+          gold: '$149',
+          platinum: '$249',
+        },
         // Add more features as needed
       ],
     };

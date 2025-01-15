@@ -17,6 +17,7 @@ class Meeting extends Model
         'google_meet_link',
         'meeting_response',
         'start_time',
+        'end_time',
         'duration',
         'status',
         'scheduled_by', // Ensure this field exists in the migration

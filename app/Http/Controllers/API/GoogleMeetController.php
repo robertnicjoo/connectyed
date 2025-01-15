@@ -404,6 +404,7 @@ class GoogleMeetController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+    
     /**
      * Refresh the Google access token for a given user.
      *
@@ -556,6 +557,7 @@ class GoogleMeetController extends Controller
 
         return response()->json(['signature' => $token]);
     }
+
     /**
      * Retrieve upcoming Google Meet meetings for the authenticated user.
      */

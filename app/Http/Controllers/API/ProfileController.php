@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Specialties;
 use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
@@ -195,6 +196,26 @@ class ProfileController extends Controller
             "data" => $profile,
             "message" => 'Success'
         ], 200);     
+    }
+    
+    public function getprofileForAdmin(Request $request)
+    {
+        $user = User::where('username', $request->username)->first();
+        $profile = Profile::with('user')->where('user_id', $user->id)->first();
+
+        if (!$profile) {
+            return response()->json([
+                "success" => false,
+                "message" => "User not found!"
+            ], 400);   
+        } else {
+            return response()->json([
+                "success" => true,
+                "data" => $profile,
+                "message" => 'Success'
+            ], 200);
+        }
+        
     }
 
     public function getdetail($username)

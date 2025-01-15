@@ -18,6 +18,9 @@ use App\Http\Controllers\API\GoogleMeetController;
 use App\Http\Controllers\API\NewsletterController;
 use App\Http\Controllers\API\MeetingController;
 use App\Http\Controllers\API\CriteriaController;
+use App\Http\Controllers\API\AppointmentController;
+use App\Http\Controllers\API\SurveyController;
+use App\Http\Controllers\API\RequestAvailabilityController;
 
 
 /*
@@ -45,6 +48,8 @@ Route::post('/google/create-free-blind-meeting',[GoogleMeetController::class, 's
 // Google OAuth
 
 // Meetings
+Route::post('/google/appointment-meeting', [AppointmentController::class, 'createMeeting'])->middleware('auth:api');
+Route::post('/google/pending-appointment-meeting', [AppointmentController::class, 'getUpcomingMeetings'])->middleware('auth:api');
 Route::post('/google/create-meeting', [GoogleMeetController::class, 'createMeeting'])->middleware('auth:api');
 Route::get('/google/check-authorization', [GoogleMeetController::class, 'checkGoogleAuthorization'])->middleware('auth:api');
 Route::get('/google/upcoming-meetings', [GoogleMeetController::class, 'getUpcomingMeetings'])->middleware('auth:api');
@@ -54,6 +59,7 @@ Route::get('google/meetings/{id}', [GoogleMeetController::class, 'getMeeting']);
 // Token Management
 Route::post('/google/refresh-token', [GoogleMeetController::class, 'refreshGoogleToken'])->middleware('auth:api');
 Route::post('/google/revoke-token', [GoogleMeetController::class, 'revokeGoogleToken'])->middleware('auth:api');
+Route::post('/survey-store', [SurveyController::class, 'store'])->middleware('auth:api');
 
 // Authentication Routes
 Route::prefix('user')->group(function () {
@@ -75,6 +81,7 @@ Route::middleware('auth:api')->prefix('profile')->group(function () {
         // Route::put('update', 'updateprofile');
         Route::get('getprofile', 'getprofile');
         Route::get('getdetail/{username}', 'getdetail');
+        Route::get('getprofileForAdmin/{username}', 'getprofileForAdmin');
         Route::get('images', 'profileimages');
         Route::post('uploadimages', 'uploadimages');
         Route::put('updateavatar', 'updateavatar');
@@ -116,19 +123,20 @@ Route::middleware('auth:api')->group(function () {
 Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\API\VerificationController::class, 'verify'])
     ->name('verification.verify');
 
-
-
-
-
 // Admin Routes
 Route::middleware('auth:api')->prefix('admin')->group(function () {
     Route::get('candidates', [AdminController::class, 'getCandidates']);
     Route::post('candidates/approve', [AdminController::class, 'approveCandidate']);
     Route::get('clients', [AdminController::class, 'getClients']);
     Route::get('overviews', [AdminController::class, 'overviews']);
+    Route::get('get-request-data', [RequestAvailabilityController::class, 'getRequestData']);
+    Route::post('send-meeting-request', [RequestAvailabilityController::class, 'sendMeetingRequest']);
+    Route::post('send-meeting-request-second-party', [RequestAvailabilityController::class, 'sendMeetingRequestSecondParty']);
+    Route::post('get-availability-form', [RequestAvailabilityController::class, 'getFirstPartyResponse']);
+    Route::post('get-availability-second-party', [RequestAvailabilityController::class, 'getSecondPartyResponse']);
+    Route::post('availability-response', [RequestAvailabilityController::class, 'storeFirstPartyResponse']);
+    Route::post('confirmation-response', [RequestAvailabilityController::class, 'storeSecondPartyResponse']);
 });
-
-
 
 // Matchmakers List (Public Route)
 Route::get('/matchmakers', [MatchmakerController::class, 'index']);

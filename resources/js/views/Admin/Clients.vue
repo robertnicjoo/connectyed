@@ -16,7 +16,11 @@
               class="w-full h-48 object-cover rounded-lg"
             />
           </div>
-          <h2 class="text-lg font-semibold text-[#213366]">{{ client.name }}</h2>
+          <h2 class="text-lg font-semibold text-[#213366]">
+            <router-link :to="`/${client.username}`">
+              {{ client.name }}
+            </router-link>
+          </h2>
           <p class="text-gray-500 break-words">{{ client.email }}</p>
 
           <!-- Location -->

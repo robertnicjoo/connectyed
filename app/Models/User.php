@@ -30,6 +30,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'username',
         'email',
         'password',
+        'phone_number',
+        'phone_verified',
         'role',
         // Removed Zoom fields
         // Added Google fields
@@ -66,6 +68,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'google_token_expires_at' => 'datetime',
         'package_purchased_at' => 'datetime',  // Ensured this is cast to datetime
         'privacypolicy' => 'boolean',
+        'phone_verified' => 'boolean',
         'termsofuse' => 'boolean',
         'ismatchmaker' => 'boolean',
         'criteria_limit' => 'integer', // Added this

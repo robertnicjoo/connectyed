@@ -189,7 +189,7 @@
         type: Object,
         required: true,
         default: () => ({
-            name: '',           
+            name: '',
             city: '',
             state: '',
             country: '',

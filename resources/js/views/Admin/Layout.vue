@@ -64,6 +64,17 @@
               <i class="fas fa-users mr-2"></i> Free Blind Date Request
             </router-link>
           </li>
+
+          <!-- Meeting Requests -->
+          <li class="mb-4">
+            <router-link
+              to="/admin/meeting_request"
+              class="block px-4 py-3 text-white hover:text-custom hover:bg-[#e7dccf] transition-colors duration-200"
+              active-class="bg-[#e7dccf] text-custom"
+            >
+              <i class="fas fa-meeting mr-2"></i> Request availability
+            </router-link>
+          </li>
         </ul>
       </div>
 

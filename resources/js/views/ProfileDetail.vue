@@ -72,9 +72,9 @@ export default {
         async getProfile() {
             this.processing = true            
             const username = this.$route.params.username
-            await axios.get('/api/profile/getdetail/'+username)
-                .then((response) => {         
-                    if (response.data) {                        
+            await axios.get('/api/profile/getprofileForAdmin/'+username)
+                .then((response) => {
+                    if (response.data) {      
                         const profile = response.data.data.profile
                         this.currentAvatar = profile.avatar
                         this.profile = profile

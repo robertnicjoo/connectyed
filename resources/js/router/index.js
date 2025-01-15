@@ -16,6 +16,8 @@ const ResetPassword = () => import('@/components/ResetPasswordForm.vue')
 const Unauthorized = () => import('@/views/Unauthorized.vue')
 const NotFound = () => import('@/views/NotFound.vue')
 const GuestBilling = () => import('@/views/Billing.vue')
+const PickADate = () => import('@/views/PickADate.vue')
+const ApproveADate = () => import('@/views/ApproveADate.vue')
 // const ZoomCallback = () => import('@/views/ZoomCallback.vue')
 
 /* Clients */
@@ -27,6 +29,7 @@ const ClientMessage = () => import('@/views/Client/Message.vue')
 const ClientBilling = () => import('@/views/Client/Billing.vue')
 const ClientCommunication = () => import('@/views/Client/Communication.vue')
 const ClientCriteria = () => import('@/views/Client/CriteriaManagement.vue') // Added Import
+const ClientSurvey = () => import('@/views/Client/Survey.vue') // Added Import
 
 /* Matchmaker */
 const MatchmakerDashboard = () => import('@/views/Matchmaker/Dashboard.vue')
@@ -47,6 +50,7 @@ const AdminOverview = () => import('@/views/Admin/Overview.vue')
 const AdminMatchmakers = () => import('@/views/Admin/Matchmakers.vue')
 const AdminClients = () => import('@/views/Admin/Clients.vue')
 const BlindRequests = () => import('@/views/Admin/BlindRequest.vue')
+const MeetingRequest = () => import('@/views/Admin/MeetingRequest.vue')
 const routes = [
     {
         path: '/email/verify',
@@ -116,7 +120,7 @@ const routes = [
             }
         ]
     },
-        {
+    {
         path: "/billing",
         component: GuestLayout,
         meta: {
@@ -131,7 +135,25 @@ const routes = [
                 meta: {
                     title: `Billing`
                 }
-            }
+            },
+            {
+                name: "PickADate",
+                path: '/pick-a-date/:id',
+                component: PickADate,
+                props: true,
+                meta: {
+                    title: `Pick A Date`
+                }
+            },
+            {
+                name: "ApproveADate",
+                path: '/approve-a-date/:id/:name',
+                component: ApproveADate,
+                props: true, // this allows passing the route params as props to the component
+                meta: {
+                    title: `Approve A Date`
+                }
+            }            
         ]
     },
     {
@@ -236,7 +258,11 @@ const routes = [
                     {
                         path: 'blind_requests',
                         component:BlindRequests
-                    }
+                    },
+                    {
+                        path: 'meeting_request',
+                        component:MeetingRequest
+                    },
                 ]
             }
         ]
@@ -342,6 +368,11 @@ const routes = [
                         meta: {
                             requiresPackage: true
                         }
+                    },
+                    {
+                        path: '/survey/:meetingId',
+                        name: 'survey',
+                        component: ClientSurvey,
                     }
                 ]
             }

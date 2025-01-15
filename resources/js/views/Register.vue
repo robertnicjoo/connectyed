@@ -217,6 +217,15 @@
             :error="errors.city"
             @change="handleCitySearch(form.city)"
           />
+
+          <!-- phone_number Dropdown -->
+          <input-text
+            label="Phone Number"
+            v-model="form.phone_number"
+            type="text"
+            :required="true"
+            :error="errors.phone_number"
+          />
         </div>
       </div>
 
@@ -251,6 +260,15 @@
             :required="true"
             :error="errors.city"
             @change="handleCitySearch(form.city)"
+          />
+
+          <!-- phone_number Dropdown -->
+          <input-text
+            label="Phone Number"
+            v-model="form.phone_number"
+            type="text"
+            :required="true"
+            :error="errors.phone_number"
           />
         </div>
       </div>
@@ -721,6 +739,7 @@ export default {
         email: "",
         password: "",
         password_confirmation: "",
+        phone_number: "",
         city: "",
         state: "",
         country: "",
@@ -963,6 +982,10 @@ export default {
               this.errors.country = 'Country is required';
               hasError = true;
             }
+            if (!this.form.phone_number) {
+              this.errors.phone_number = 'Phone Number is required';
+              hasError = true;
+            }
           }
           break;
 
@@ -979,6 +1002,10 @@ export default {
             }
             if (!this.form.country) {
               this.errors.country = 'Country is required';
+              hasError = true;
+            }
+            if (!this.form.phone_number) {
+              this.errors.phone_number = 'Phone Number is required';
               hasError = true;
             }
           } else {
@@ -1267,6 +1294,7 @@ export default {
       formData.append('termsofuse', this.form.termsofuse === true ? '1' : '0');
 
       // Append location details
+      formData.append('phone_number', this.form.phone_number);
       formData.append('city', this.form.city);
       formData.append('state', this.form.state);
       formData.append('country', this.form.country);
@@ -1392,6 +1420,7 @@ export default {
         username: 'Username',
         email: 'Email',
         password: 'Password',
+        phone_number: 'Phone Number',
         city: 'City',
         state: 'State',
         country: 'Country',

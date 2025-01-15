@@ -14,7 +14,7 @@ store.dispatch('auth/initialize').then(() => {
 
     // Use vue-gtag for Google Analytics
     app.use(VueGtag, {
-        config: { id: 'G-V14H8KVHQZ' } // Replace with your Google Analytics Measurement ID
+        config: { id: 'AW-16739328770' } // Replace with your Google Analytics Measurement ID
     }, Router);
 
     app.use(Router);

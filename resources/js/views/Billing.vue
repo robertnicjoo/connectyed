@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8  items-center justify-center">
     <!-- Package Options Header -->
     <div class="mb-6">
       <h2 class="text-xl font-bold mb-2">Dating Packages</h2>
@@ -16,14 +16,29 @@
         :key="product.id" 
         class="bg-white p-6 rounded-lg shadow relative"
       >
+
+      <!-- Badge for Silver Package -->
+      <div
+        v-if="product.id === 'silver_package'"
+        class="absolute top-0 left-0 bg-yellow-500 text-blue-700 font-bold px-3  py-1 transform -rotate-45 shadow-md z-10 mt-6"
+        style="transform-origin: top left;margin-top:2.9rem;margin-left:-2.6rem;"
+      >
+        TRY IT NOW!
+      </div>
+
         <h3 class="text-lg font-semibold mb-2">{{ product.name }}</h3>
         <p class="text-gray-700 mb-4">{{ product.description }}</p>
         <p class="text-xl font-bold mb-2">
-          <span class="line-through text-gray-500">
+
+          <span v-if="product.id !== 'silver_package'" class="line-through text-gray-500">
             ${{ (product.originalPrice / 100).toFixed(2) }}
           </span>
-          <span class="text-green-600">
+          <span v-if="product.id !== 'silver_package'" class="text-green-600">
             ${{ (product.discountedPrice / 100).toFixed(2) }}
+          </span>
+
+          <span v-if="product.id === 'silver_package'" class="text-green-600">
+            FREE
           </span>
         </p>
         <button
@@ -56,20 +71,11 @@ export default {
     return {
       products: [
         {
-          id: 'matchmaker_intro',
-          name: 'Matchmaker Intro',
-          description: '1 on 1 Connectyed Team Call',
-          originalPrice: 5000,
-          discountedPrice: 2500,
-          stripePriceId: 'price_1Q6dwmFZef913bMWLjDn3QTZ',
-          rank: 0
-        },
-        {
           id: 'silver_package',
           name: 'Silver Package',
           description: '1 on 1 Blind Date - Choose up to 4 criteria',
-          originalPrice: 9900,
-          discountedPrice: 5000,
+          originalPrice: 0,
+          discountedPrice: 0,
           stripePriceId: 'price_1Q6dwmFZef913bMWLjDn3QTZ', // Verify if this should be unique
           rank: 1
         },

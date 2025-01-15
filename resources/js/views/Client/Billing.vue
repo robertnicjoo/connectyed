@@ -80,12 +80,12 @@
 
       <!-- Badge for Silver Package -->
       <div
-  v-if="product.id === 'silver_package'"
-  class="absolute top-0 left-0 bg-yellow-500 text-blue-700 font-bold px-3  py-1 transform -rotate-45 shadow-md z-10 mt-6"
-  style="transform-origin: top left;margin-top:2.9rem;margin-left:-2.6rem;"
->
-  TRY IT NOW!
-</div>
+        v-if="product.id === 'silver_package'"
+        class="absolute top-0 left-0 bg-yellow-500 text-blue-700 font-bold px-3  py-1 transform -rotate-45 shadow-md z-10 mt-6"
+        style="transform-origin: top left;margin-top:2.9rem;margin-left:-2.6rem;"
+      >
+        TRY IT NOW!
+      </div>
 
 
         <div v-if="isCurrentPackage(product.id)" 
