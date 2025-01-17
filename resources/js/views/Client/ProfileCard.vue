@@ -10,7 +10,7 @@
                             <div class="flex flex-wrap justify-center cursor-pointer">
                                 <!-- Main Image -->
                                 <div class="w-[270px] h-[360px] overflow-hidden bg-gray-400">
-                                    <img :src="profile.avatar" alt="Main Image" class="w-full h-full object-cover">
+                                    <img :src="profile.profile_image1" alt="Main Image" class="w-full h-full object-cover">
                                 </div>
                             </div>
                             
@@ -29,14 +29,7 @@
                                     {{ profile.city ? profile.city : 'Your City' }}, {{ profile.country ? profile.country : 'Your Country' }}
                                 </label>
                                 </div>
-                            </div>
-                            <div class="flex flex-wrap mb-3">
-                                <div class="w-full">
-                                <label class="text-gray-700 text-md">
-                                    location: {{ profile.location ? profile.location : 'Your current location / City' }}
-                                </label>
-                                </div>
-                            </div>                                    
+                            </div>                                  
                             <div class="flex flex-wrap mb-3">
                                 <div class="w-full">
                                 <label class="text-gray-700 text-md">

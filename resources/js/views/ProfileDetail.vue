@@ -27,7 +27,7 @@ export default {
             image: '',
             twitter: '',
             linkedin: '',
-        }        
+        }
       }
     },
     mounted() {
@@ -75,8 +75,9 @@ export default {
             await axios.get('/api/profile/getprofileForAdmin/'+username)
                 .then((response) => {
                     if (response.data) {      
-                        const profile = response.data.data.profile
-                        this.currentAvatar = profile.avatar
+                        console.log('data::: ', response.data.data);
+                        const profile = response.data.data
+                        this.currentAvatar = response.data.data.avatar
                         this.profile = profile
                         this.profile.clients = response.data.data.profile_list ?? []
                         this.profile.specialties = response.data.data.specialties ?? []
