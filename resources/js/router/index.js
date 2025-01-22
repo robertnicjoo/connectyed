@@ -51,6 +51,7 @@ const AdminMatchmakers = () => import('@/views/Admin/Matchmakers.vue')
 const AdminClients = () => import('@/views/Admin/Clients.vue')
 const BlindRequests = () => import('@/views/Admin/BlindRequest.vue')
 const MeetingRequest = () => import('@/views/Admin/MeetingRequest.vue')
+const Affiliate = () => import('@/views/Admin/affiliates/Affiliate.vue')
 const routes = [
     {
         path: '/email/verify',
@@ -262,6 +263,10 @@ const routes = [
                     {
                         path: 'meeting_request',
                         component:MeetingRequest
+                    },
+                    {
+                        path: 'affiliates',
+                        component:Affiliate
                     },
                 ]
             }

@@ -21,7 +21,7 @@ use App\Http\Controllers\API\CriteriaController;
 use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\SurveyController;
 use App\Http\Controllers\API\RequestAvailabilityController;
-
+use App\Http\Controllers\API\AffiliateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ Route::get('post/featured', [PostsController::class, 'featured']);
 // Profile Routes
 Route::middleware('auth:api')->prefix('profile')->group(function () {
     Route::controller(ProfileController::class)->group(function () {
-        // Route::put('update', 'updateprofile');
+        Route::put('update', 'updateprofileMatchmaker');
         Route::get('getprofile', 'getprofile');
         Route::get('getdetail/{username}', 'getdetail');
         Route::get('getprofileForAdmin/{username}', 'getprofileForAdmin');
@@ -136,6 +136,14 @@ Route::middleware('auth:api')->prefix('admin')->group(function () {
     Route::post('get-availability-second-party', [RequestAvailabilityController::class, 'getSecondPartyResponse']);
     Route::post('availability-response', [RequestAvailabilityController::class, 'storeFirstPartyResponse']);
     Route::post('confirmation-response', [RequestAvailabilityController::class, 'storeSecondPartyResponse']);
+    Route::post('deleteUser', [AuthController::class, 'deleteUser']);
+
+    // Affiliate
+    Route::get('affiliate-matchmakers', [AffiliateController::class, 'getMatchmakers']);
+    Route::get('affiliates', [AffiliateController::class, 'index']);
+    Route::post('affiliate-assign-code', [AffiliateController::class, 'assignCode']);
+    Route::put('affiliates/{id}', [AffiliateController::class, 'update']);
+    Route::delete('affiliates/{id}', [AffiliateController::class, 'destroy']);
 });
 
 // Matchmakers List (Public Route)

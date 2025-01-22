@@ -153,13 +153,18 @@ class AuthController extends Controller
                 $profileData = array_merge($profileData, [
                     'gender' => $request->gender,
                     'haircolor' => $request->hairColor,
-                    'bodytype' => json_encode($request->bodyType),
-                    'ethnicity' => json_encode($request->ethnicity),
+                    'bodytype' => $request->bodyType,
+                    // 'bodytype' => json_encode($request->bodyType),
+                    'ethnicity' => $request->ethnicity,
+                    // 'ethnicity' => json_encode($request->ethnicity),
                     'height' => $request->heightFeet,
                     'inches' => $request->heightInches,
-                    'maritalstatus' => json_encode($request->maritalStatus),
-                    'children' => json_encode($request->children),
-                    'religion' => json_encode($request->religion),
+                    'maritalstatus' => $request->maritalStatus,
+                    // 'maritalstatus' => json_encode($request->maritalStatus),
+                    'children' => $request->children,
+                    // 'children' => json_encode($request->children),
+                    'religion' => $request->religion,
+                    // 'religion' => json_encode($request->religion),
                     'smoker' => $request->smoker ? '1' : '0',
                     'drinker' => $request->drinker,
                     'education' => $request->education,
@@ -167,7 +172,11 @@ class AuthController extends Controller
                     'jobtitle' => $request->jobTitle,
                     'sports' => $request->sports,
                     'hobbies' => $request->hobbies,
-                    'languages' => json_encode($request->languages),
+                    'languages' => $request->languages,
+                    // 'languages' => json_encode($request->languages),
+                    // no database column yet
+                    // 'having_kids' => $request->having_kids,
+                    // 'having_kids_in_future' => $request->having_kids_in_future,
                 ]);
 
                $seekingData = [
@@ -178,13 +187,16 @@ class AuthController extends Controller
                 'current_kids_number' => $request->current_kids_number,
                 'desired_kids_number' => $request->desired_children,
                 'gender' => $request->seeking_gender,
-                'bodytype' => json_encode($request->seeking_body_type),
+                'bodytype' => $request->seeking_body_type,
+                // 'bodytype' => json_encode($request->seeking_body_type),
                 'haircolor' => $request->seeking_hair_color,
                 'maritalstatus' => $request->seeking_marital_status,
-                'religion' => json_encode($request->seeking_religion),
+                'religion' => $request->seeking_religion,
+                // 'religion' => json_encode($request->seeking_religion),
                 'smoker' => $request->seeking_smoker === 'No' ? 0 : 1,
                 'drinker' => $request->seeking_drinker,
-                'ethnicity' => json_encode($request->seeking_ethnicity),
+                'ethnicity' => $request->seeking_ethnicity,
+                // 'ethnicity' => json_encode($request->seeking_ethnicity),
                ];
                $seeking = Seeking::create($seekingData);
             }
@@ -559,5 +571,25 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Verification link sent!',
         ], 200);
+    }
+
+
+    public function deleteUser(Request $request)
+    {
+        $client = User::findOrFail($request->input('user_id'));
+
+        if ($client) {
+            $client->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User and all related data deleted successfully!',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found!',
+            ], 404);
+        }
     }
 }

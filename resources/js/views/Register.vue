@@ -366,6 +366,15 @@
             :required="true"
             :error="errors.maritalStatus"
           />
+
+          <select-option
+            label="Do you have kids?"
+            :options="haveKidsAnswers"
+            v-model="form.haveKids"
+            :required="true"
+            :error="errors.haveKids"
+          />
+          <template v-if="form.haveKids === 'Yes'">
           <MultiSelectOption
             label="Children"
             :options="childrenOptions"
@@ -373,6 +382,16 @@
             :required="true"
             :error="errors.children"
           />
+          </template>
+
+          <select-option
+            label="Do you want kids in the future?"
+            :options="haveKidsAnswers"
+            v-model="form.haveKidsFuture"
+            :required="true"
+            :error="errors.haveKidsFuture"
+          />
+
           <MultiSelectOption
             label="Religion"
             :options="religions"
@@ -734,6 +753,8 @@ export default {
       currentStep: 1,
       steps: [1, 2, 3, 4, 5, 6, 7],
       form: {
+        haveKids: "",
+        haveKidsFuture: "",
         name: "",
         username: "",
         email: "",
@@ -786,6 +807,7 @@ export default {
       filteredCountries: countries.map(country => country.name), // For search functionality
       filteredStates: [], // Initially empty, will be populated based on selected country
       filteredCities: [], // Initially empty, will be populated based on selected state
+      haveKidsAnswers: ['Yes', 'No'],
       genders: ['Male', 'Female', 'Other'],
       bodyTypes: ['Slender', 'Average', 'Athletic', 'Curvy', 'Big and Beautiful'],
       maritalStatuses: ['Single', 'Separated', 'Divorced', 'Married', 'Widowed'],
@@ -1077,10 +1099,28 @@ export default {
                this.errors.maritalStatus = 'Marital Status is required';
                hasError = true;
              }
-             if (this.form.children === '' || this.form.children === null) {
-               this.errors.children = 'Children is required';
+
+             if (!this.form.haveKids) {
+               this.errors.haveKids = 'Having Kids is required';
                hasError = true;
              }
+             
+             if (!this.form.haveKidsFuture) {
+               this.errors.haveKidsFuture = 'Have Kids in future is required';
+               hasError = true;
+             }
+
+             if(this.form.haveKids === 'Yes') {
+              if (this.form.children === '' || this.form.children === null) {
+                this.errors.children = 'Children is required';
+                hasError = true;
+              }
+             } else {
+              if (this.form.children === '' || this.form.children === null) {
+                this.form.children = ["0"];
+              }
+             }
+             
              if (!this.form.religion) {
                this.errors.religion = 'Religion is required';
                hasError = true;
@@ -1262,11 +1302,6 @@ export default {
         this.errors[fieldName] = 'This field is required.';
       }
     },
-
-    // onFileChange(event, imageField) {
-    //   const file = event.target.files[0];
-    //   this.files[imageField] = file;
-    // },
     async register() {
       this.processing = true;
       this.clearErrors();
@@ -1299,6 +1334,12 @@ export default {
       formData.append('state', this.form.state);
       formData.append('country', this.form.country);
       formData.append('age', this.form.age);
+      if (this.files.profile_image1) {
+        formData.append('profile_image1', this.files.profile_image1);
+      }
+      if (this.files.profile_image2) {
+        formData.append('profile_image2', this.files.profile_image2);
+      }
 
       if (!this.form.ismatchmaker) {
         // Append all client-specific fields
@@ -1317,9 +1358,14 @@ export default {
         this.form.maritalStatus.forEach((status) => {
           formData.append('maritalStatus[]', status);
         });
-        this.form.children.forEach((child) => {
-          formData.append('children[]', child);
-        });
+
+        if (this.form.children.length > 0) {
+          this.form.children.forEach((child) => {
+            formData.append('children[]', child);
+          });
+        } else {
+          formData.append('children[]', "0"); // Or skip if optional
+        }
         this.form.religion.forEach(item => {
           formData.append('religion[]', item); // Append directly without JSON.stringify
         });
@@ -1348,12 +1394,8 @@ export default {
         formData.append('seeking_smoker', this.form.seeking_smoker); 
         formData.append('seeking_drinker', this.form.seeking_drinker);
         formData.append('seeking_ethnicity', this.form.seeking_ethnicity);
-        if (this.files.profile_image1) {
-          formData.append('profile_image1', this.files.profile_image1);
-        }
-        if (this.files.profile_image2) {
-          formData.append('profile_image2', this.files.profile_image2);
-        }
+        formData.append('having_kids', this.form.haveKids);
+        formData.append('having_kids_in_future', this.form.haveKidsFuture);
       }
 
       // Append matchmaker specific fields

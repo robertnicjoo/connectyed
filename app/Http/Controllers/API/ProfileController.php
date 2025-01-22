@@ -76,6 +76,7 @@ class ProfileController extends Controller
         
         // Validate the request
         $request->validate([
+            'profile.username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'profile.name' => 'required|string|max:255',
             'profile.city' => 'nullable|string|max:255',
             'profile.state' => 'nullable|string|max:255',
@@ -94,6 +95,10 @@ class ProfileController extends Controller
         // Update user details - only if name is provided
         if ($request->has('profile.name')) {
             $user->name = $request->input('profile.name');
+            $user->save();
+        }
+        if ($request->has('profile.username')) {
+            $user->username = $request->input('profile.username');
             $user->save();
         }
 
@@ -122,6 +127,64 @@ class ProfileController extends Controller
                 } else {
                     $profile->$field = $value;
                 }
+            }
+        }
+
+        $profile->save();
+
+        return response()->json([
+            "success" => true,
+            "data" => $profile,
+            "message" => 'Profile updated successfully'
+        ], 200);
+    }
+
+
+    public function updateprofileMatchmaker(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Validate the request
+        $request->validate([
+            'profile.username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'profile.name' => 'required|string|max:255',
+            'profile.city' => 'nullable|string|max:255',
+            'profile.state' => 'nullable|string|max:255',
+            'profile.country' => 'nullable|string|max:255',
+            'profile.email' => 'nullable|string|max:255',
+            'profile.yearsexperience' => 'nullable|numeric',
+            'profile.bio' => 'nullable|string',
+            'profile.jobtitle' => 'nullable|string|max:255',
+            
+        ]);
+
+        // Update user details - only if name is provided
+        if ($request->has('profile.name')) {
+            $user->name = $request->input('profile.name');
+            $user->save();
+        }
+        if ($request->has('profile.username')) {
+            $user->username = $request->input('profile.username');
+            $user->save();
+        }
+
+        // Update profile details
+        $profile = Profile::where('user_id', $user->id)->first();
+        
+        if (!$profile) {
+            $profile = new Profile();
+            $profile->user_id = $user->id;
+        }
+
+        // Update only the fields that are present in the request
+        $fields = [
+            'name', 'city', 'state', 'country', 'yearsexperience',
+            'jobtitle', 'bio', 'profile_image1', 'profile_image2'
+        ];
+
+        foreach ($fields as $field) {
+            if ($request->has("profile.$field")) {
+                $value = $request->input("profile.$field");
             }
         }
 

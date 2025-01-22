@@ -59,6 +59,20 @@
         </div>
       </div>
 
+      <div class="flex flex-wrap -mx-3 mb-4">
+        <div class="w-full px-3">
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="username">
+            Username
+          </label>
+          <input 
+            class="appearance-none block w-full border border-gray-500 rounded p-2 leading-tight focus:outline-none focus:bg-white" 
+            type="text" 
+            v-model="profile.username" 
+            id="username"
+          >
+        </div>
+      </div>
+
       <!-- Experience and Job Title -->
       <div class="flex flex-wrap -mx-3 mb-4">
         <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
@@ -169,6 +183,7 @@ export default {
     return {
       profile: {
         name: '',
+        username: '',
         city: '',
         state: '',
         country: '',
@@ -252,6 +267,7 @@ export default {
             ...response.data.data,
             name: response.data.data.name || response.data.data.user.name,
             email: response.data.data.email || response.data.data.user.email,
+            username: response.data.data.username || response.data.data.user.username,
           }
         }
       } catch (error) {

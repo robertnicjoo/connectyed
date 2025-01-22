@@ -1,7 +1,7 @@
 <template>
     <div class="mx-full shadow-connectyed rounded-xl bg-connectyed-card-light flex flex-col py-5 px-5 mb-5">
         <div class="grid grid-cols-4 gap-4">
-            <label class="text-lg font-bold text-gray-900 dark:text-white mb-4 p-2">About your Profile</label>
+            <label class="text-lg font-bold text-gray-900 mb-4 p-2">About your Profile</label>
             <span></span>
             <span></span>
             <button
@@ -130,6 +130,20 @@
                                 type="text"
                                 v-model="profile.name"
                                 id="name"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-6">
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="username">
+                                Username
+                            </label>
+                            <input
+                                class="appearance-none block w-full border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                type="text"
+                                v-model="profile.username"
+                                id="username"
                                 required
                             />
                         </div>
@@ -585,6 +599,7 @@ export default {
                 bio: '',
                 country: '',
                 state: '',
+                username: '',
                 email: '',
                 city: '',
                 bodytype: [],
@@ -686,6 +701,7 @@ export default {
                     this.profile = response.data.data;
                     this.user = response.data.data.user;
                     this.profile.email = this.user.email;
+                    this.profile.username = this.user.username;
 
                     this.userCity = this.profile.city;
                     
@@ -783,6 +799,7 @@ export default {
                 const formData = new FormData();
                 
                 // Append profile fields to formData
+                formData.append('profile[username]', this.profile.username || this.user.username);
                 formData.append('profile[name]', this.profile.name || this.user.name);
                 formData.append('profile[bio]', this.profile.bio || '');
                 formData.append('profile[country]', this.profile.country || '');

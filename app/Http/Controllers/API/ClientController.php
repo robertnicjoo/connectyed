@@ -597,43 +597,43 @@ class ClientController extends Controller
             ], 500);
         }
     }
-public function getPublicClientsByMatchmakerId($matchmakerId)
-{
-    try {
-        $clients = MatchmakerClient::where('matchmaker_id', $matchmakerId)
-            ->with([
-                'user:id,name'
-            ])
-            ->get(['id', 'user_id', 'thumbnail_image', 'age']);
+    
+    public function getPublicClientsByMatchmakerId($matchmakerId)
+    {
+        try {
+            $clients = MatchmakerClient::where('matchmaker_id', $matchmakerId)
+                ->with([
+                    'user:id,name'
+                ])
+                ->get(['id', 'user_id', 'thumbnail_image', 'age']);
 
-        // Transform the image paths
-        $clients->transform(function ($client) {
-            if ($client->thumbnail_image) {
-                $client->thumbnail_image = Storage::url($client->thumbnail_image);
-            } else {
-                $client->thumbnail_image = '/default-client-image.jpg'; // Set a default image if none exists
-            }
-            return [
-                'id' => $client->id,
-                'name' => $client->user->name,
-                'age' => $client->age,
-                'thumbnail_image' => $client->thumbnail_image,
-            ];
-        });
+            // Transform the image paths
+            $clients->transform(function ($client) {
+                if ($client->thumbnail_image) {
+                    $client->thumbnail_image = Storage::url($client->thumbnail_image);
+                } else {
+                    $client->thumbnail_image = '/default-client-image.jpg'; // Set a default image if none exists
+                }
+                return [
+                    'id' => $client->id,
+                    'name' => $client->user->name,
+                    'age' => $client->age,
+                    'thumbnail_image' => $client->thumbnail_image,
+                ];
+            });
 
-        return response()->json([
-            'success' => true,
-            'data' => $clients,
-            'message' => 'Clients fetched successfully'
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $clients,
+                'message' => 'Clients fetched successfully'
+            ]);
 
-    } catch (\Exception $e) {
-        Log::error('Error fetching clients: ' . $e->getMessage(), ['exception' => $e]);
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to fetch clients',
-        ], 500);
+        } catch (\Exception $e) {
+            Log::error('Error fetching clients: ' . $e->getMessage(), ['exception' => $e]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch clients',
+            ], 500);
+        }
     }
-}
-
 }

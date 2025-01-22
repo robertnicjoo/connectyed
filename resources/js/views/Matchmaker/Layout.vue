@@ -38,11 +38,12 @@
             </li>
             <li class="mb-4">
               <router-link
-                to="/matchmaker/profile"
+                :to="{name: 'profiledetail', params: {username: `${user?.username}`}}"
                 class="block px-4 py-3 text-white hover:bg-[#e7dccf] hover:text-custom transition-colors duration-200"
                 active-class="bg-[#e7dccf] text-custom"
               >
-                <i class="fas fa-user mr-2"></i> My Profile
+                <font-awesome-icon :icon="faUser" class="w-5 h-5 mr-4" />
+                <span>My Profile</span>
               </router-link>
             </li>
           </ul>
@@ -78,7 +79,7 @@
 </template>
 
 <script setup>
-import { faTachometerAlt, faUser, faBriefcase, faUsers, faDollarSign, faEnvelope, faTasks, faCalendar, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faUser, faBriefcase, faUsers, faDollarSign, faEnvelope, faTasks, faCalendar, faRightFromBracket, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -96,7 +97,7 @@ const authorization = computed(() => store.state.auth.authorization);
 // Menu items for the navigation
 const menuItems = ref([
   { title: "Dashboard", icon: faTachometerAlt, link: "/dashboard" },        
-  { title: "My Profile", icon: faUser, link: "/profile" },
+  { title: "Edit Profile", icon: faEdit, link: "/profile" },
   { title: "My Specialties", icon: faBriefcase, link: "/specialties" },
   { title: "My Availability", icon: faCalendar, link: "/availability" },
   { title: "Clients", icon: faUsers, link: "/clients" },

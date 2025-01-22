@@ -187,4 +187,28 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasMany(Meeting::class, 'matchmaker_id');
     }
+
+
+
+
+    // Delete all relations when deleting the user
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            // Delete related records manually if not using cascade delete
+            $user->profile()->delete();
+            $user->seeking()->delete();
+            $user->specialties()->delete();
+            $user->availability()->delete();
+            $user->matchmakerClient()->delete();
+
+            // Detach relationships
+            $user->meetingsAsClient()->detach();
+            $user->hostedMeetings()->each(function ($meeting) {
+                $meeting->delete(); // Assuming this deletes related clients or resources
+            });
+        });
+    }
 }
