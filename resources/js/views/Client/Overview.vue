@@ -1,6 +1,6 @@
 <template>
 <div ></div>
-  <div :class="serverData.length > 0 || serverDataOld.length > 0 ? 'w-full' : 'max-w-md'" class="p-6 bg-gray-50 rounded-lg shadow-lg mx-auto">
+  <div :class="serverData.length > 0 || serverDataOld.length > 0 ? 'w-full' : 'max-w-7xl'" class="p-6 bg-gray-50 rounded-lg shadow-lg mx-auto">
     <h2 class="text-xl font-bold mb-4">Welcome {{ user && user.name ? user.name : 'Guest' }}!</h2>
 
     <div v-if="serverData.length > 0">
@@ -35,78 +35,121 @@
       </div>
     </div>
     <div v-else>
-      <!-- Appointment Form -->
-      <form @submit.prevent="submitAppointment">
-        <label for="timezone" class="block text-sm font-medium text-gray-700 mb-2">
-          Select the timezone you will be located in when your date occurs:
-        </label>
-        <select
-          id="timezone"
-          v-model="selectedTimezone"
-          class="block w-full p-2 border rounded-lg mb-4"
-          required
-        >
-          <option value="" disabled>Select Timezone</option>
-          <option v-for="timezone in timezones" :key="timezone.value" :value="timezone.value">
-            {{ timezone.label }}
-          </option>
-        </select>
-
-        <p class="text-sm font-medium text-gray-700 mb-2">
-          Then please share your soonest available options. We need to verify your identity before you begin!
-        </p>
-
-        <!-- Dropdowns for date and time -->
-        <div class="space-y-4">
-          <div v-for="(slot, index) in appointmentSlots" :key="index" class="flex space-x-4">
-            <!-- Date -->
-            <select
-              v-model="slot.date"
-              class="block w-1/3 p-2 border rounded-lg"
-              @change="validateSlot(index)"
-              required
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- optional message -->
+        <div class="p-4">
+          <p>Before you proceed, we need to verify your identity.</p>
+          <p>
+            This optional meeting with our administrators is designed to confirm your identity. While you may choose to skip this step, we encourage you to review the
+            <button
+              @click="openModal"
+              class="text-blue-500 hover:underline focus:outline-none"
             >
-              <option value="" disabled>Select Date</option>
-              <option v-for="date in availableDates" :key="date" :value="date">
-                {{ date }}
-              </option>
-            </select>
+              benefits of identity verification
+            </button>
+            to make an informed decision.
+          </p>
 
-            <!-- Start Time -->
-            <select
-              v-model="slot.startTime"
-              class="block w-1/3 p-2 border rounded-lg"
-              :disabled="!slot.date"
-              @change="setEndTime(index)"
-              required
-            >
-              <option value="" disabled>Start Time</option>
-              <option
-                v-for="time in filteredStartTimes(index)"
-                :key="time"
-                :value="time"
+          <!-- Modal -->
+          <div
+            v-if="isModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+            @click.self="closeModal"
+          >
+            <div class="relative max-w-lg rounded-lg bg-white p-6 shadow-lg">
+              <button
+                @click="closeModal"
+                class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 focus:outline-none"
               >
-                {{ time }}
-              </option>
-            </select>
-
-            <!-- End Time -->
-            <input
-              type="text"
-              :value="slot.endTime"
-              class="block w-1/3 p-2 border rounded-lg bg-gray-100 cursor-not-allowed"
-              readonly
-            />
+                &times;
+              </button>
+              <h2 class="mb-4 text-xl font-semibold">Benefits of Identity Verification</h2>
+              <div class="max-h-80 overflow-y-auto">
+                <ul class="list-disc space-y-2 pl-6 text-gray-700">
+                  <li>Enhances trust and safety across our platform for everyone.</li>
+                  <li>Increases your chances of finding genuine and compatible matches.</li>
+                  <li>Ensures the profiles you interact with are authentic and verified.</li>
+                  <li>Creates a safer environment for meaningful connections.</li>
+                  <li>Helps us offer personalized recommendations based on your verified profile.</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
-        <button
-          type="submit"
-          class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 w-full"
-        >
-          Submit Appointment
-        </button>
-      </form>
+        <!-- Appointment Form -->
+        <form @submit.prevent="submitAppointment">
+          <label for="timezone" class="block text-sm font-medium text-gray-700 mb-2">
+            Select the timezone you will be located in when your date occurs:
+          </label>
+          <select
+            id="timezone"
+            v-model="selectedTimezone"
+            class="block w-full p-2 border rounded-lg mb-4"
+            required
+          >
+            <option value="" disabled>Select Timezone</option>
+            <option v-for="timezone in timezones" :key="timezone.value" :value="timezone.value">
+              {{ timezone.label }}
+            </option>
+          </select>
+
+          <p class="text-sm font-medium text-gray-700 mb-2">
+            Then please share your soonest available options.
+          </p>
+
+          <!-- Dropdowns for date and time -->
+          <div class="space-y-4">
+            <div v-for="(slot, index) in appointmentSlots" :key="index" class="flex space-x-4">
+              <!-- Date -->
+              <select
+                v-model="slot.date"
+                class="block w-1/3 p-2 border rounded-lg"
+                @change="validateSlot(index)"
+                required
+              >
+                <option value="" disabled>Select Date</option>
+                <option v-for="date in availableDates" :key="date" :value="date">
+                  {{ date }}
+                </option>
+              </select>
+
+              <!-- Start Time -->
+              <select
+                v-model="slot.startTime"
+                class="block w-1/3 p-2 border rounded-lg"
+                :disabled="!slot.date"
+                @change="setEndTime(index)"
+                required
+              >
+                <option value="" disabled>Start Time</option>
+                <option
+                  v-for="time in filteredStartTimes(index)"
+                  :key="time"
+                  :value="time"
+                >
+                  {{ time }}
+                </option>
+              </select>
+
+              <!-- End Time -->
+              <input
+                type="text"
+                :value="slot.endTime"
+                class="block w-1/3 p-2 border rounded-lg bg-gray-100 cursor-not-allowed"
+                readonly
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 w-full"
+          >
+            Submit Appointment
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -118,6 +161,7 @@ export default {
   name: "AppointmentForm",
   data() {
     return {
+      isModalOpen: false,
       serverDataOld: [],
       serverData: [],
       selectedTimezone: "",
@@ -142,6 +186,12 @@ export default {
     },
   },
   methods: {
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
     generateAvailableDates() {
       const dates = [];
       const today = new Date();

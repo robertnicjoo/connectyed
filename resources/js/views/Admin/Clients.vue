@@ -13,7 +13,7 @@
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
             <div
-                v-for="client in clients"
+                v-for="(client, index) in clients"
                 :key="client.id"
                 class="p-6 bg-white shadow-md rounded-lg"
             >
@@ -27,7 +27,7 @@
                     </div>
                     <h2 class="text-lg font-semibold text-[#213366]">
                         <router-link :to="`/${client.username}`">
-                            {{ client.name }}
+                            {{ index+1 }}: {{ client.name }}
                         </router-link>
                     </h2>
                     <p class="text-gray-500 break-words">{{ client.email }}</p>
@@ -162,6 +162,7 @@
                 </p>
                 <p><strong>City:</strong> {{ selectedClient.profile.city }}</p>
                 <p><strong>Age:</strong> {{ selectedClient.profile.age }}</p>
+                <p><strong>Phone Number:</strong> {{ selectedClient.phone_number }}</p>
                 <p v-if="selectedClient.profile.children">
                     <strong>Children:</strong>
                     {{ getDisplayValue(selectedClient.profile.children) }}

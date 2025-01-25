@@ -34,7 +34,6 @@ export default {
     async fetchOverviewData() {
       try {
         const response = await axios.get('/api/admin/overviews'); // Call the API
-        console.log("Overview Data:", response.data); // Log the response data
         this.overviewData = [
           {
             title: "Total Users",
