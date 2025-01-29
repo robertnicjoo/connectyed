@@ -1,9 +1,8 @@
-# ProfileCard.vue
 <template>
-  <div class="profile-card bg-white rounded-xl shadow-lg overflow-hidden">
+  <div class="profile-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-lg mx-auto md:max-w-3xl">
     <!-- Profile Header -->
     <div class="relative">
-      <div class="profile-image w-full h-72 overflow-hidden">
+      <div class="profile-image w-full h-72 overflow-hidden md:h-96">
         <img 
           :src="profileImage" 
           :alt="matchmaker.name"
@@ -12,7 +11,7 @@
       </div>
       
       <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-        <h3 class="text-2xl font-bold text-white mb-1">{{ matchmaker.name }}</h3>
+        <h3 class="text-xl md:text-2xl font-bold text-white mb-1">{{ matchmaker.name }}</h3>
         <p v-if="location" class="flex items-center text-white/90 text-sm">
           <span class="mr-1">📍</span>
           {{ location }}
@@ -23,7 +22,7 @@
     <!-- Main Content -->
     <div class="profile-info p-5">
       <!-- Key Stats -->
-      <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="grid grid-cols-2 gap-4 mb-4 md:grid-cols-4">
         <div class="stat-box bg-gray-50 rounded-lg p-3 text-center">
           <span class="text-sm text-gray-600">Experience</span>
           <p class="text-lg font-semibold text-gray-800">
@@ -42,11 +41,11 @@
       <div v-if="matchmaker.specialties" class="mb-4">
         <h4 class="text-sm font-semibold text-gray-700 mb-2">Specialties</h4>
         <div class="space-y-2">
-          <div class="flex items-center gap-2">
+          <div class="flex flex-col md:flex-row md:items-center gap-2">
             <span class="text-sm font-medium text-gray-600">Age Range:</span>
             <span class="text-sm">{{ matchmaker.specialties.minage }} - {{ matchmaker.specialties.maxage }}</span>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex flex-col md:flex-row md:items-center gap-2">
             <span class="text-sm font-medium text-gray-600">Preferred Gender:</span>
             <span class="text-sm capitalize">{{ matchmaker.specialties.gender }}</span>
           </div>
@@ -87,7 +86,7 @@
       <!-- Clients Gallery -->
       <div v-if="clients.length" class="mb-4">
         <h4 class="text-sm font-semibold text-gray-700 mb-2">Recent Clients</h4>
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
           <div 
             v-for="client in displayedClients" 
             :key="client.id"
@@ -103,40 +102,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- View More Button -->
-      <button 
-        @click="showMoreInfo = !showMoreInfo"
-        class="w-full py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2"
-      >
-        <span>{{ showMoreInfo ? 'View Less' : 'View More' }}</span>
-        <span :class="{ 'rotate-180': showMoreInfo }" class="transition-transform duration-200">
-          ↓
-        </span>
-      </button>
-
-      <!-- Additional Info (Hidden by default) -->
-      <div 
-        v-if="showMoreInfo"
-        class="mt-4 space-y-4 animate-fade-in"
-      >
-        <!-- Availability -->
-        <div v-if="matchmaker.availability?.length" class="availability-section">
-          <h4 class="text-sm font-semibold text-gray-700 mb-2">Availability</h4>
-          <div class="space-y-1.5">
-            <div 
-              v-for="(slot, index) in limitedAvailability" 
-              :key="index"
-              class="flex items-center text-sm text-gray-600 bg-gray-50 rounded-lg p-2"
-            >
-              <span class="mr-2">📅</span>
-              {{ formatAvailability(slot) }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Add any other sections you want to show in the expanded view -->
       </div>
     </div>
   </div>
