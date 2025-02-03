@@ -33,15 +33,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'phone_number',
         'phone_verified',
         'role',
-        // Removed Zoom fields
-        // Added Google fields
         'google_access_token',
         'google_refresh_token',
         'google_token_expires_at',
         'package_purchased_at',
-        'purchased_package',  // Added this
-        'criteria_limit',     // Added this
-        'matchmaker_id',      // Added if necessary for matchmaker relationship
+        'purchased_package',
+        'criteria_limit',
+        'matchmaker_id',
     ];
 
     /**
@@ -52,7 +50,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
-        // Hide sensitive Google tokens
         'google_access_token',
         'google_refresh_token',
     ];
@@ -188,7 +185,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Meeting::class, 'matchmaker_id');
     }
 
-
+    public function socialMedia()
+    {
+        return $this->hasMany(SocialMedia::class);
+    }
 
 
     // Delete all relations when deleting the user

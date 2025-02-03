@@ -10,6 +10,7 @@
     <!-- Add Login Button -->
     <div class="login-button-container">
       <a :href="loginUrl" class="login-button text-black">Login</a>
+      <a :href="registerUrl" class="login-button text-black">Register</a>
     </div>
 
     <!-- Marker Points -->
@@ -333,6 +334,7 @@ const datingTips = ref([
 
 // Computed property for login URL
 const loginUrl = computed(() => `${import.meta.env.VITE_APP_URL}/login`);
+const registerUrl = computed(() => `${import.meta.env.VITE_APP_URL}/register`);
 
 onMounted(async () => {
   try {

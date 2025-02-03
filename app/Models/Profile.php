@@ -40,10 +40,9 @@ class Profile extends Model
         'name', 
         'seeking',
         'occupation',
-        'ethnicity', //multiple
-        // 'min_age',
-        // 'max_age',
-        // 'desired_children',
+        'ethnicity',
+        'having_kids',
+        'having_kids_in_future',
 
     ];
 
@@ -64,6 +63,7 @@ class Profile extends Model
         'ethnicity' => 'array',
         'children' => 'array',
         'maritalstatus' => 'array',
+        'languages' => 'array',
     ];
 
     /**

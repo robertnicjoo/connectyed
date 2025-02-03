@@ -15,6 +15,7 @@ class Seeking extends Model
         'user_id',
         'min_age',
         'max_age',
+        'summarize',
         'location',
         'current_kids_number',
         'desired_kids_number',

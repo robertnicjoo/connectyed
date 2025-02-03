@@ -22,6 +22,7 @@ use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\SurveyController;
 use App\Http\Controllers\API\RequestAvailabilityController;
 use App\Http\Controllers\API\AffiliateController;
+use App\Http\Controllers\API\SocialMediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,8 @@ Route::prefix('user')->group(function () {
     Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::get('introspect', [AuthController::class, 'introspect'])->middleware('auth:api');
     Route::post('resend-verification-email', [AuthController::class, 'resendVerificationEmail'])->middleware('auth:api');
+    Route::post('get-profile-score', [AuthController::class, 'getProfileScore'])->middleware('auth:api');
+    Route::post('update-profile-dashboard', [AuthController::class, 'updateOnDashboard'])->middleware('auth:api');
 });
 
 // Posts Routes
@@ -77,6 +80,7 @@ Route::get('post/featured', [PostsController::class, 'featured']);
 
 // Profile Routes
 Route::middleware('auth:api')->prefix('profile')->group(function () {
+    Route::apiResource('social-media', SocialMediaController::class);
     Route::controller(ProfileController::class)->group(function () {
         Route::put('update', 'updateprofileMatchmaker');
         Route::get('getprofile', 'getprofile');

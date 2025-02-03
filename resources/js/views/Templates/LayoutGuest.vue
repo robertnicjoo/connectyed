@@ -19,7 +19,7 @@
                     <a class="navbar-brand" href="#">
                         <h2>
                             <router-link :to="{name:'home'}" class="nav-link">
-                                <img src="assets/images/logo/connectyedlogo.png" alt="Connectyed Logo" class="w-[70px]">
+                                <img src="/assets/images/logo/connectyedlogo.png" alt="Connectyed Logo" class="w-[70px]">
                             </router-link>
                         </h2>
                     </a>

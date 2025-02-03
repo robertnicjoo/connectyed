@@ -2,7 +2,7 @@
   <div class="flex min-h-screen bg-gray-100">
 
     <!-- Left Sidebar Navigation Menu -->
-    <div class="hidden md:block h-screen w-64 bg-[#213366] text-[#e7dccf]">
+    <div class="hidden md:block h-auto w-64 bg-[#213366] text-[#e7dccf]">
       <aside
         class="
           w-64 bg-[#213366] text-[#e7dccf] flex flex-col fixed md:relative z-50 transition-transform duration-300

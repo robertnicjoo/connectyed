@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('min_age');
             $table->integer('max_age');
+            $table->longText('summarize')->nullable();
             $table->string('location',255);
             $table->integer('current_kids_number');
             $table->integer('desired_kids_number');

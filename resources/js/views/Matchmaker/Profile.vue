@@ -171,12 +171,17 @@
         :token="authorization.token" 
       />
     </div>
+    <div>
+      <hr class="mt-5">
+      <SocialMedia />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import NewPassword from '../NewPassword.vue';
+import SocialMedia from '../SocialMedia.vue';
 
 export default {
   data() {
@@ -204,6 +209,7 @@ export default {
   },
   components: {
     NewPassword,
+    SocialMedia,
   },
 
   methods: {

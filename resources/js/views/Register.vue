@@ -81,652 +81,271 @@
     </div>
 
     <form @submit.prevent="register" enctype="multipart/form-data">
-      <!-- Form Steps -->
-
-      <!-- Step 1: Account Information -->
-      <div v-if="currentStep === 1">
-        <h3 class="font-semibold text-lg mb-4">Account Information</h3>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
-          <input-text
-            label="Name"
-            v-model="form.name"
-            :required="true"
-            :error="errors.name"
-            maxlength="255"
-          />
-          <input-text
-            label="Username"
-            v-model="form.username"
-            :required="true"
-            :error="errors.username"
-            maxlength="50"
-          />
-          <input-text
-            label="Email"
-            v-model="form.email"
-            :required="true"
-            :error="errors.email"
-            maxlength="255"
-            type="email"
-          />
-          <input-text
-            label="Password"
-            type="password"
-            v-model="form.password"
-            :required="true"
-            :error="errors.password"
-            maxlength="100"
-          />
-          <input-text
-            label="Confirm Password"
-            type="password"
-            v-model="form.password_confirmation"
-            :required="true"
-            :error="errors.password_confirmation"
-            maxlength="100"
-          />
-        </div>
-      </div>
-
-      <!-- Step 2: Profile Images & Basic Info (Matchmaker) -->
-      <div v-if="currentStep === 2 && form.ismatchmaker">
-        <h3 class="font-semibold text-lg mb-4">Profile Images & Basic Info</h3>
-
-        <!-- Profile Image 1 -->
-        <div class="mb-4">
-          <label class="block text-gray-700">
-            Upload Profile Image 1 <span class="text-red-500">*</span>
-          </label>
-          <input type="file" @change="onFileChange($event, 'profile_image1')" accept="image/*" required />
-          <p v-if="errors.profile_image1" class="text-red-500 text-xs italic">{{ errors.profile_image1 }}</p>
+        <!-- Step 1: Account Information -->
+        <div v-if="currentStep === 1">
+          <h3 class="font-semibold text-lg mb-4">Account Information</h3>
+          <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
+            <input-text
+              label="Name"
+              v-model="form.name"
+              :required="true"
+              :error="errors.name"
+              maxlength="255"
+            />
+            <input-text
+              label="Username"
+              v-model="form.username"
+              :required="true"
+              :error="errors.username"
+              maxlength="50"
+            />
+            <input-text
+              label="Email"
+              v-model="form.email"
+              :required="true"
+              :error="errors.email"
+              maxlength="255"
+              type="email"
+            />
+            <input-text
+              label="Password"
+              type="password"
+              v-model="form.password"
+              :required="true"
+              :error="errors.password"
+              maxlength="100"
+            />
+            <input-text
+              label="Confirm Password"
+              type="password"
+              v-model="form.password_confirmation"
+              :required="true"
+              :error="errors.password_confirmation"
+              maxlength="100"
+            />
+          </div>
         </div>
 
-        <!-- Profile Image 2 -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Upload Profile Image 2</label>
-          <input type="file" @change="onFileChange($event, 'profile_image2')" accept="image/*" />
-          <p v-if="errors.profile_image2" class="text-red-500 text-xs italic">{{ errors.profile_image2 }}</p>
-        </div>
+        <!-- Step 2: Profile Images & Basic Info (Matchmaker) -->
+        <div v-if="currentStep === 2 && form.ismatchmaker">
+          <h3 class="font-semibold text-lg mb-4">Profile Images & Basic Info</h3>
 
-        <!-- Age -->
-        <input-text
-          label="Age"
-          v-model="form.age"
-          type="number"
-          :required="true"
-          :error="errors.age"
-          maxlength="3"
-          min="18"
-          max="100"
-        />
+          <!-- Profile Image 1 -->
+          <div class="mb-4">
+            <label class="block text-gray-700">
+              Upload Profile Image 1 <span class="text-red-500">*</span>
+            </label>
+            <input type="file" @change="onFileChange($event, 'profile_image1')" accept="image/*" required />
+            <p v-if="errors.profile_image1" class="text-red-500 text-xs italic">{{ errors.profile_image1 }}</p>
+          </div>
 
-        <!-- Years of Experience -->
-        <input-text
-          label="Years of Experience"
-          v-model="form.yearsexperience"
-          type="number"
-          :required="true"
-          :error="errors.yearsexperience"
-          min="0"
-        />
+          <!-- Profile Image 2 -->
+          <div class="mb-4">
+            <label class="block text-gray-700">Upload Profile Image 2</label>
+            <input type="file" @change="onFileChange($event, 'profile_image2')" accept="image/*" />
+            <p v-if="errors.profile_image2" class="text-red-500 text-xs italic">{{ errors.profile_image2 }}</p>
+          </div>
 
-        <!-- Bio -->
-        <div class="mb-4">
-          <label class="block text-gray-700">
-            Bio <span class="text-red-500">*</span>
-          </label>
-          <textarea
-            v-model="form.bio"
-            placeholder="Tell us about yourself"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          ></textarea>
-          <p v-if="errors.bio" class="text-red-500 text-xs italic">{{ errors.bio }}</p>
-        </div>
-      </div>
-
-      <!-- Step 2: Location Details (Client) -->
-      <div v-if="currentStep === 2 && !form.ismatchmaker">
-        <h3 class="font-semibold text-lg mb-4">Location Details</h3>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
-          <select-option
-            label="Country"
-            :options="filteredCountries"
-            v-model="form.country"
-            :required="true"
-            :error="errors.country"
-            @change="handleCountrySearch(form.country)"
-          />
-
-          <!-- State Dropdown -->
-          <select-option
-            label="State"
-            :options="filteredStates"
-            v-model="form.state"
-            :required="true"
-            :error="errors.state"
-            @change="handleStateSearch(form.state)"
-          />
-
-          <!-- City Dropdown -->
-          <select-option
-            label="City"
-            :options="filteredCities"
-            v-model="form.city"
-            :required="true"
-            :error="errors.city"
-            @change="handleCitySearch(form.city)"
-          />
-
-          <!-- phone_number Dropdown -->
-          <input-text
-            label="Phone Number"
-            v-model="form.phone_number"
-            type="text"
-            :required="true"
-            :error="errors.phone_number"
-          />
-        </div>
-      </div>
-
-      <!-- Step 3: Location Details (Matchmaker) -->
-      <div v-if="currentStep === 3 && form.ismatchmaker">
-        <h3 class="font-semibold text-lg mb-4">Location Details</h3>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
-          <select-option
-            label="Country"
-            :options="filteredCountries"
-            v-model="form.country"
-            :required="true"
-            :error="errors.country"
-            @change="handleCountrySearch(form.country)"
-          />
-
-          <!-- State Dropdown -->
-          <select-option
-            label="State"
-            :options="filteredStates"
-            v-model="form.state"
-            :required="true"
-            :error="errors.state"
-            @change="handleStateSearch(form.state)"
-          />
-
-          <!-- City Dropdown -->
-          <select-option
-            label="City"
-            :options="filteredCities"
-            v-model="form.city"
-            :required="true"
-            :error="errors.city"
-            @change="handleCitySearch(form.city)"
-          />
-
-          <!-- phone_number Dropdown -->
-          <input-text
-            label="Phone Number"
-            v-model="form.phone_number"
-            type="text"
-            :required="true"
-            :error="errors.phone_number"
-          />
-        </div>
-      </div>
-
-      <!-- Step 3: Personal Information (Clients Only) -->
-      <div v-if="currentStep === 3 && !form.ismatchmaker">
-        <!-- Profile Image 1 -->
-        <div class="mb-4">
-          <label class="block text-gray-700">
-            Upload Profile Image 1 <span class="text-red-500">*</span>
-          </label>
-          <input type="file" @change="onFileChange($event, 'profile_image1')" accept="image/*" required />
-          <p v-if="errors.profile_image1" class="text-red-500 text-xs italic">{{ errors.profile_image1 }}</p>
-        </div>
-
-        <!-- Profile Image 2 -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Upload Profile Image 2</label>
-          <input type="file" @change="onFileChange($event, 'profile_image2')" accept="image/*" required />
-          <p v-if="errors.profile_image2" class="text-red-500 text-xs italic">{{ errors.profile_image2 }}</p>
-        </div>
-        <h3 class="font-semibold text-lg mb-4">Personal Information</h3>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
+          <!-- Age -->
           <input-text
             label="Age"
             v-model="form.age"
             type="number"
-            :required="true"
             :error="errors.age"
             maxlength="3"
-            min="1"
-            max="120"
+            min="18"
+            max="100"
           />
-          <select-option
-            label="Gender"
-            :options="genders"
-            v-model="form.gender"
-            :required="true"
-            :error="errors.gender"
-          />
+
+          <!-- Years of Experience -->
           <input-text
-            label="Hair Color"
-            v-model="form.hairColor"
-            :required="true"
-            :error="errors.hairColor"
-            maxlength="50"
+            label="Years of Experience"
+            v-model="form.yearsexperience"
+            type="number"
+            :error="errors.yearsexperience"
+            min="0"
           />
-          <MultiSelectOption
-            label="Body Type"
-            :options="bodyTypes"
-            v-model="form.bodyType"
-            :required="true"
-            :error="errors.bodyType"
-          />
-          <MultiSelectOption
-              label="Ethnicity"
-              :options="ethnicity"
-              v-model="form.ethnicity"
+
+          <!-- Bio -->
+          <div class="mb-4">
+            <label class="block text-gray-700">
+              Bio <span class="text-red-500">*</span>
+            </label>
+            <textarea
+              v-model="form.bio"
+              placeholder="Tell us about yourself"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+            ></textarea>
+            <p v-if="errors.bio" class="text-red-500 text-xs italic">{{ errors.bio }}</p>
+          </div>
+        </div>
+
+        <!-- Step 2: Location Details (Client) -->
+        <div v-if="currentStep === 2 && !form.ismatchmaker">
+          <h3 class="font-semibold text-lg mb-4">Location Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
+            <select-option
+              label="Country"
+              :options="filteredCountries"
+              v-model="form.country"
               :required="true"
-              :error="errors.ethnicity"
+              :error="errors.country"
+              @change="handleCountrySearch(form.country)"
             />
-          <div class="flex gap-4">
-            <input-text
-              label="Height (Feet)"
-              v-model="form.heightFeet"
-              type="number"
+
+            <!-- State Dropdown -->
+            <select-option
+              label="State"
+              :options="filteredStates"
+              v-model="form.state"
               :required="true"
-              :error="errors.heightFeet"
-              maxlength="2"
-              min="1"
-              max="8"
+              :error="errors.state"
+              @change="handleStateSearch(form.state)"
             />
-            <input-text
-              label="Inches"
-              v-model="form.heightInches"
-              type="number"
+
+            <!-- City Dropdown -->
+            <select-option
+              label="City"
+              :options="filteredCities"
+              v-model="form.city"
               :required="true"
-              :error="errors.heightInches"
-              maxlength="2"
-              min="0"
-              max="11"
+              :error="errors.city"
+              @change="handleCitySearch(form.city)"
+            />
+
+            <!-- phone_number Dropdown -->
+            <input-text
+              label="Phone Number"
+              v-model="form.phone_number"
+              type="text"
+              :required="true"
+              :error="errors.phone_number"
             />
           </div>
         </div>
-      </div>
 
-      <!-- Step 4: Lifestyle Information (Clients Only) -->
-      <div v-if="currentStep === 4 && !form.ismatchmaker">
-        <h3 class="font-semibold text-lg mb-4">Lifestyle Information</h3>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
-          <MultiSelectOption
-            label="Marital Status"
-            :options="maritalStatuses"
-            v-model="form.maritalStatus"
-            :required="true"
-            :error="errors.maritalStatus"
-          />
+        <!-- Step 3: Location Details (Matchmaker) -->
+        <div v-if="currentStep === 3 && form.ismatchmaker">
+          <h3 class="font-semibold text-lg mb-4">Location Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
+            <select-option
+              label="Country"
+              :options="filteredCountries"
+              v-model="form.country"
+              :required="true"
+              :error="errors.country"
+              @change="handleCountrySearch(form.country)"
+            />
 
-          <select-option
-            label="Do you have kids?"
-            :options="haveKidsAnswers"
-            v-model="form.haveKids"
-            :required="true"
-            :error="errors.haveKids"
-          />
-          <template v-if="form.haveKids === 'Yes'">
-          <MultiSelectOption
-            label="Children"
-            :options="childrenOptions"
-            v-model="form.children"
-            :required="true"
-            :error="errors.children"
-          />
-          </template>
+            <!-- State Dropdown -->
+            <select-option
+              label="State"
+              :options="filteredStates"
+              v-model="form.state"
+              :required="true"
+              :error="errors.state"
+              @change="handleStateSearch(form.state)"
+            />
 
-          <select-option
-            label="Do you want kids in the future?"
-            :options="haveKidsAnswers"
-            v-model="form.haveKidsFuture"
-            :required="true"
-            :error="errors.haveKidsFuture"
-          />
+            <!-- City Dropdown -->
+            <select-option
+              label="City"
+              :options="filteredCities"
+              v-model="form.city"
+              :required="true"
+              :error="errors.city"
+              @change="handleCitySearch(form.city)"
+            />
 
-          <MultiSelectOption
-            label="Religion"
-            :options="religions"
-            v-model="form.religion"
-            :required="true"
-            :error="errors.religion"
-          />
-          <select-option
-            label="Smoker"
-            :options="yesNoOptions"
-            v-model="form.smoker"
-            :required="true"
-            :error="errors.smoker"
-          />
-          <select-option
-            label="Drinker"
-            :options="drinkerOptions"
-            v-model="form.drinker"
-            :required="true"
-            :error="errors.drinker"
-          />
+            <!-- phone_number Dropdown -->
+            <input-text
+              label="Phone Number"
+              v-model="form.phone_number"
+              type="text"
+              :required="true"
+              :error="errors.phone_number"
+            />
+          </div>
         </div>
-      </div>
 
-      <!-- Step 5: Professional and Hobbies (Clients Only) -->
-      <div v-if="currentStep === 5 && !form.ismatchmaker">
-        <h3 class="font-semibold text-lg mb-4">Professional and Hobbies</h3>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-1">
-          <select-option
-            label="Education"
-            :options="educationLevels"
-            v-model="form.education"
-            :required="true"
-            :error="errors.education"
-          />
-          <input-text
-            label="Occupation"
-            v-model="form.occupation"
-            :required="true"
-            :error="errors.occupation"
-            maxlength="100"
-          />
-          <input-text
-            label="Job Title"
-            v-model="form.jobTitle"
-            :required="true"
-            :error="errors.jobTitle"
-            maxlength="100"
-          />
-          <input-text
-            label="Sports"
-            v-model="form.sports"
-            :error="errors.sports"
-            maxlength="100"
-          />
-          <input-text
-            label="Hobbies"
-            v-model="form.hobbies"
-            :error="errors.hobbies"
-            maxlength="100"
-          />
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
-          <!-- Languages and Levels -->
-          <div class="space-y-4">
-            <label for="languages" class="block">Languages</label>
-            <!-- Language-Level Pairing -->
-            <div v-for="(item, index) in form.languages" :key="index" class="flex space-x-4">
-              <select
-                v-model="item.language"
-                class="form-select"
-                @change="updateLanguage(index)"
-              >
-                <option value="" disabled>Select a language</option>
-                <option v-for="(language, i) in availableLanguages(index)" :key="i" :value="language">
-                  {{ language }}
-                </option>
-              </select>
-
-              <select
-                v-model="item.level"
-                class="form-select"
-                required
-              >
-                <option value="" disabled>Select level</option>
-                <option v-for="(level, i) in englishLevels" :key="i" :value="level">
-                  {{ level }}
-                </option>
-              </select>
-
-              <button
-                @click="removeLanguage(index)"
-                class="ml-2 text-red-500"
-                :disabled="form.languages.length <= 1"
-              >
-                Remove
-              </button>
-            </div>
-
-            <!-- Add Language Button -->
-            <button
-              @click="addLanguage"
-              class="mt-2 px-4 py-2 rounded"
-              type="button"
-              :class="{
-                'bg-blue-500 text-white': !(form.languages.length >= 5),
-                'bg-gray-400 text-gray-600 cursor-not-allowed': form.languages.length >= 4
-              }"
-              :disabled="form.languages.length >= 5"
+        <!-- Step 4: Terms and Privacy (Both Matchmaker and Client) -->
+        <div v-if="(currentStep === 4 && form.ismatchmaker) || (currentStep === 3 && !form.ismatchmaker)">
+          <h3 class="font-semibold text-lg mb-4">Terms and Conditions</h3>
+          <div class="space-y-4 flex items-start">
+            <label class="text-gray-500 text-sm mb-2 flex items-center">
+              <input
+                type="checkbox"
+                v-model="form.privacypolicy"
+                id="privacypolicy"
+                name="privacypolicy"
+                :required="true"
+                class="mr-2 form-checkbox"
+              />
+              <span class="text-lg">I have read and agree to the</span>
+            </label>
+            <a
+              @click="showPrivacy()"
+              class="text-connectyed-link-dark cursor-pointer underline"
             >
-              Add Language
-            </button>
+              Privacy Policy
+            </a>
+          </div>
+          <div class="space-y-4 flex items-start mt-2">
+            <label class="text-gray-500 text-sm mb-2 flex items-center">
+              <input
+                type="checkbox"
+                v-model="form.termsofuse"
+                id="termsofuse"
+                name="termsofuse"
+                :required="true"
+                class="mr-2 form-checkbox"
+              />
+              <span class="text-lg">I have read and agree to the</span>
+            </label>
+            <a
+              @click="showTerm()"
+              class="text-connectyed-link-dark cursor-pointer underline"
+            >
+              Terms of Use
+            </a>
           </div>
         </div>
-      </div>
 
-      <!-- Step 6: Seeking (Clients Only) -->
-      <div v-if="currentStep === 6 && !form.ismatchmaker">
-        <h3 class="font-semibold text-lg mb-4">Seeking</h3>
-         <div class="mb-4">
-          <label class="block text-gray-700">
-            Summarize what you are seeking in a match <span class="text-red-500">*</span>
-          </label>
-          <textarea
-            v-model="form.seeking"
-            placeholder="Please explain"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          ></textarea>
-          <p v-if="errors.seeking" class="text-red-500 text-xs italic">{{ errors.seeking }}</p>
-        </div>
-
-        <div class="flex gap-4">
-          <input-text
-            label="Min. Age"
-            v-model="form.min_age"
-            type="number"
-            :required="true"
-            :error="errors.age"
-            maxlength="3"
-            min="1"
-            max="120"
-          />
-          <input-text
-            label="Max. Age"
-            v-model="form.max_age"
-            type="number"
-            :required="true"
-            :error="errors.age"
-            maxlength="3"
-            min="1"
-            max="120"
-          />
-        </div>
-
-        <input-text
-            label="Location"
-            v-model="form.seeking_location"
-            :required="true"
-            :error="errors.seeking_location"
-            maxlength="100"
-          />
-        <div class="flex gap-5">
-          <select-option
-            label="Current Kid(s)"
-            :options="childrenOptions"
-            v-model="form.current_kids_number"
-            :required="true"
-            :error="errors.current_kids_number"
-          />
-          <select-option
-            label="Desired Kid(s)"
-            :options="childrenOptions"
-            v-model="form.desired_children"
-            :required="true"
-            :error="errors.desired_children"
-          />
-        </div>
-        <input-text
-            label="Hair Color"
-            v-model="form.seeking_hair_color"
-            :required="true"
-            :error="errors.hairColor"
-            maxlength="50"
-          />
-          <div class="flex gap-4">
-            <div class="flex-1">
-            <select-option
-              label="Gender&nbsp;"
-              :options="genders"
-              v-model="form.seeking_gender"
-              :required="true"
-              :error="errors.gender"
-            />
-            </div>
-            <div class="flex-1">
-            <MultiSelectOption
-              label="Body Type&nbsp;"
-              :options="bodyTypes"
-              v-model="form.seeking_body_type"
-              :required="true"
-              :error="errors.bodyType"
-            />
-            </div>
-          </div>
-          <div class="flex gap-5">
-            <div class="flex-1">
-            <MultiSelectOption
-              label="Marital Status"
-              :options="maritalStatuses"
-              v-model="form.seeking_marital_status"
-              :required="true"
-              :error="errors.maritalStatus"
-            />
-            </div>
-            <div class="flex-1">
-            <MultiSelectOption
-              label="Religion"
-              :options="religions"
-              v-model="form.seeking_religion"
-              :required="true"
-              :error="errors.religion"
-            />
-            </div>
-          </div>
-          <div class="flex gap-5">
-            <div class="flex-1">
-            <select-option
-              label="Smoker"
-              :options="yesNoOptions"
-              v-model="form.seeking_smoker"
-              :required="true"
-              :error="errors.smoker"
-            />
-            </div>
-            <div class="flex-1">
-            <select-option
-              label="Drinker"
-              :options="drinkerOptions"
-              v-model="form.seeking_drinker"
-              :required="true"
-              :error="errors.drinker"
-            />
-            </div>
-            </div>
-
-          <div class="flex gap-5">
-            <div class="flex-1">
-            <MultiSelectOption
-              label="Ethnicity"
-              :options="ethnicity"
-              v-model="form.seeking_ethnicity"
-              :required="true"
-              :error="errors.seeking_ethnicity"
-            />
-            </div>
-          </div>
-      </div>
-      <!-- Step 4: Terms and Privacy (Both Matchmaker and Client) -->
-      <div v-if="(currentStep === 4 && form.ismatchmaker) || (currentStep === 7 && !form.ismatchmaker)">
-        <h3 class="font-semibold text-lg mb-4">Terms and Conditions</h3>
-        <div class="space-y-4 flex items-start">
-          <label class="text-gray-500 text-sm mb-2 flex items-center">
-            <input
-              type="checkbox"
-              v-model="form.privacypolicy"
-              id="privacypolicy"
-              name="privacypolicy"
-              :required="true"
-              class="mr-2 form-checkbox"
-            />
-            <span class="text-lg">I have read and agree to the</span>
-          </label>
-          <a
-            @click="showPrivacy()"
-            class="text-connectyed-link-dark cursor-pointer underline"
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+          <button
+            v-if="currentStep > 1"
+            type="button"
+            class="bg-connectyed-button-pagination-light text-connectyed-button-dark py-2 px-4 rounded min-w-32 cursor-pointer"
+            @click="prevStep"
           >
-            Privacy Policy
-          </a>
-        </div>
-        <div class="space-y-4 flex items-start mt-2">
-          <label class="text-gray-500 text-sm mb-2 flex items-center">
-            <input
-              type="checkbox"
-              v-model="form.termsofuse"
-              id="termsofuse"
-              name="termsofuse"
-              :required="true"
-              class="mr-2 form-checkbox"
-            />
-            <span class="text-lg">I have read and agree to the</span>
-          </label>
-          <a
-            @click="showTerm()"
-            class="text-connectyed-link-dark cursor-pointer underline"
+            Previous
+          </button>
+          <div class="flex-1"></div>
+          <button
+            v-if="currentStep < steps.length"
+            type="button"
+            class="bg-connectyed-button-pagination-light text-connectyed-button-dark py-2 px-4 rounded min-w-32 cursor-pointer"
+            @click="nextStep"
           >
-            Terms of Use
-          </a>
+            Next
+          </button>
+          <button
+            v-else
+            class="bg-connectyed-button-light text-connectyed-button-dark hover:bg-connectyed-button-hover-light hover:text-connectyed-button-hover-dark py-2 px-4 rounded cursor-pointer"
+            type="submit"
+            :disabled="processing"
+          >
+            {{ processing ? "Please wait" : "Register" }}
+          </button>
         </div>
-      </div>
+      </form>
 
-      <!-- Navigation Buttons -->
-      <div class="mt-6 flex justify-between">
-        <button
-          v-if="currentStep > 1"
-          type="button"
-          class="bg-connectyed-button-pagination-light text-connectyed-button-dark py-2 px-4 rounded min-w-32 cursor-pointer"
-          @click="prevStep"
-        >
-          Previous
-        </button>
-        <div class="flex-1"></div>
-        <button
-          v-if="currentStep < steps.length"
-          type="button"
-          class="bg-connectyed-button-pagination-light text-connectyed-button-dark py-2 px-4 rounded min-w-32 cursor-pointer"
-          @click="nextStep"
-        >
-          Next
-        </button>
-        <button
-          v-else
-          class="bg-connectyed-button-light text-connectyed-button-dark hover:bg-connectyed-button-hover-light hover:text-connectyed-button-hover-dark py-2 px-4 rounded cursor-pointer"
-          type="submit"
-          :disabled="processing"
-        >
-          {{ processing ? "Please wait" : "Register" }}
-        </button>
-      </div>
-    </form>
-
-    <label class="my-4 w-full block text-center">
-      Already have an account?
-      <router-link class="text-connectyed-link-dark underline" :to="{ name: 'login' }">Login Now!</router-link>
-    </label>
+      <label class="my-4 w-full block text-center">
+        Already have an account?
+        <router-link class="text-connectyed-link-dark underline" :to="{ name: 'login' }">Login Now!</router-link>
+      </label>
 
     <pdf-modal :isOpen="isModalOpen" :pdfUrl="pdfUrl" @close="closeModal" />
   </div>
@@ -751,7 +370,7 @@ export default {
   data() {
     return {
       currentStep: 1,
-      steps: [1, 2, 3, 4, 5, 6, 7],
+      steps: [1, 2, 3],
       form: {
         haveKids: "",
         haveKidsFuture: "",
@@ -890,7 +509,7 @@ export default {
       ogUrl.setAttribute("property", "og:url");
       ogUrl.setAttribute("content", "https://www.comnectyed.com/register");
       document.head.appendChild(ogUrl);
-  },
+    },
     // Add a new language-level pair to the form
     addLanguage() {
       if (this.form.languages.length < 4) {
@@ -898,12 +517,10 @@ export default {
         this.form.languages.push({ language: '', level: this.englishLevels[0] });
       }
     },
-
     // Remove a language-level pair from the form
     removeLanguage(index) {
       this.form.languages.splice(index, 1);
     },
-
     // Update the available languages after each selection
     updateLanguage(index) {
       const selectedLanguage = this.form.languages[index].language;
@@ -917,7 +534,6 @@ export default {
         });
       }
     },
-
     // Get available languages for the current index (exclude already selected languages)
     availableLanguages(index) {
       const selectedLanguages = this.form.languages.map(item => item.language);
@@ -1031,52 +647,13 @@ export default {
               hasError = true;
             }
           } else {
-            // Matchmaker Registration Step 2: Profile Images & Basic Info
-            if (!this.files.profile_image1) {
-              this.errors.profile_image1 = 'Profile Image 1 is required';
+            // Client Registration Step 6: Terms and Privacy
+            if (!this.form.privacypolicy) {
+              this.errors.general = 'You must agree to the Privacy Policy';
               hasError = true;
             }
-            // Matchmaker Registration Step 2: Profile Images & Basic Info
-            if (!this.files.profile_image2) {
-              this.errors.profile_image2 = 'Profile Image 2 is required';
-              hasError = true;
-            }
-            // Client Registration Step 3: Personal Information
-            if (!this.form.age) {
-              this.errors.age = 'Age is required';
-              hasError = true;
-            } else if (isNaN(this.form.age) || this.form.age <= 0 || this.form.age > 120) {
-              this.errors.age = 'Please enter a valid age';
-              hasError = true;
-            }
-             if (!this.form.gender) {
-               this.errors.gender = 'Gender is required';
-               hasError = true;
-             }
-             if (!this.form.hairColor) {
-               this.errors.hairColor = 'Hair Color is required';
-              hasError = true;
-             }
-             if (!this.form.bodyType) {
-               this.errors.bodyType = 'Body Type is required';
-              hasError = true;
-             }
-             if (!this.form.ethnicity) {
-              this.errors.ethnicity = 'Ethnicity is required';
-              hasError = true;
-            }
-            if (!this.form.heightFeet) {
-              this.errors.heightFeet = 'Height in Feet is required';
-              hasError = true;
-            } else if (isNaN(this.form.heightFeet) || this.form.heightFeet <= 0 || this.form.heightFeet > 8) {
-              this.errors.heightFeet = 'Please enter a valid height in feet';
-              hasError = true;
-            }
-            if (this.form.heightInches === '' || this.form.heightInches === null) {
-              this.errors.heightInches = 'Inches is required';
-              hasError = true;
-            } else if (isNaN(this.form.heightInches) || this.form.heightInches < 0 || this.form.heightInches >= 12) {
-              this.errors.heightInches = 'Please enter a valid number of inches';
+            if (!this.form.termsofuse) {
+              this.errors.general = 'You must agree to the Terms of Use';
               hasError = true;
             }
           }
@@ -1094,149 +671,186 @@ export default {
               hasError = true;
             }
           } else {
-             //Client Registration Step 4: Lifestyle Information
-             if (!this.form.maritalStatus) {
-               this.errors.maritalStatus = 'Marital Status is required';
-               hasError = true;
-             }
-
-             if (!this.form.haveKids) {
-               this.errors.haveKids = 'Having Kids is required';
-               hasError = true;
-             }
-             
-             if (!this.form.haveKidsFuture) {
-               this.errors.haveKidsFuture = 'Have Kids in future is required';
-               hasError = true;
-             }
-
-             if(this.form.haveKids === 'Yes') {
-              if (this.form.children === '' || this.form.children === null) {
-                this.errors.children = 'Children is required';
-                hasError = true;
-              }
-             } else {
-              if (this.form.children === '' || this.form.children === null) {
-                this.form.children = ["0"];
-              }
-             }
-             
-             if (!this.form.religion) {
-               this.errors.religion = 'Religion is required';
-               hasError = true;
-             }
-            if (this.form.smoker === false && this.form.smoker === '') { // Adjusted for boolean
-              this.errors.smoker = 'Smoker status is required';
-              hasError = true;
-            }
-            if (!this.form.drinker) {
-              this.errors.drinker = 'Drinker status is required';
-              hasError = true;
-            }
+            // Matchmaker Registration Step 2: Profile Images & Basic Info
+            // if (!this.files.profile_image1) {
+            //   this.errors.profile_image1 = 'Profile Image 1 is required';
+            //   hasError = true;
+            // }
+            // Matchmaker Registration Step 2: Profile Images & Basic Info
+            // if (!this.files.profile_image2) {
+            //   this.errors.profile_image2 = 'Profile Image 2 is required';
+            //   hasError = true;
+            // }
+            // Client Registration Step 3: Personal Information
+            // if (!this.form.age) {
+            //   this.errors.age = 'Age is required';
+            //   hasError = true;
+            // } else if (isNaN(this.form.age) || this.form.age <= 0 || this.form.age > 120) {
+            //   this.errors.age = 'Please enter a valid age';
+            //   hasError = true;
+            // }
+          //   if (!this.form.gender) {
+          //     this.errors.gender = 'Gender is required';
+          //     hasError = true;
+          //   }
+          //   if (!this.form.hairColor) {
+          //     this.errors.hairColor = 'Hair Color is required';
+          //   hasError = true;
+          //   }
+          //   if (!this.form.bodyType) {
+          //     this.errors.bodyType = 'Body Type is required';
+          //   hasError = true;
+          //   }
+          //   if (!this.form.ethnicity) {
+          //   this.errors.ethnicity = 'Ethnicity is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.heightFeet) {
+          //   this.errors.heightFeet = 'Height in Feet is required';
+          //   hasError = true;
+          // } else if (isNaN(this.form.heightFeet) || this.form.heightFeet <= 0 || this.form.heightFeet > 8) {
+          //   this.errors.heightFeet = 'Please enter a valid height in feet';
+          //   hasError = true;
+          // }
+          // if (this.form.heightInches === '' || this.form.heightInches === null) {
+          //   this.errors.heightInches = 'Inches is required';
+          //   hasError = true;
+          // } else if (isNaN(this.form.heightInches) || this.form.heightInches < 0 || this.form.heightInches >= 12) {
+          //   this.errors.heightInches = 'Please enter a valid number of inches';
+          //   hasError = true;
+          // }
           }
           break;
 
         case 5:
-          if (!this.form.ismatchmaker) {
-            // Client Registration Step 5: Professional and Hobbies
-            if (!this.form.education) {
-              this.errors.education = 'Education is required';
-              hasError = true;
-            }
-            if (!this.form.occupation) {
-              this.errors.occupation = 'Occupation is required';
-              hasError = true;
-            }
-            if (!this.form.jobTitle) {
-              this.errors.jobTitle = 'Job Title is required';
-              hasError = true;
-            }
-            if (!this.form.languages) {
-              this.errors.languages = 'Languages is required';
-              hasError = true;
-            }
-          }
+          // if (!this.form.ismatchmaker) {
+          //   //Client Registration Step 4: Lifestyle Information
+          //   if (!this.form.maritalStatus) {
+          //      this.errors.maritalStatus = 'Marital Status is required';
+          //      hasError = true;
+          //    }
+
+          //    if (!this.form.haveKids) {
+          //      this.errors.haveKids = 'Have Kids is required';
+          //      hasError = true;
+          //    }
+             
+          //    if (!this.form.haveKidsFuture) {
+          //      this.errors.haveKidsFuture = 'Have Kids in future is required';
+          //      hasError = true;
+          //    }
+
+          //    if(this.form.haveKids === 'Yes') {
+          //     if (this.form.children === '' || this.form.children === null) {
+          //       this.errors.children = 'Have Kids is required';
+          //       hasError = true;
+          //     }
+          //    } else {
+          //     if (this.form.children === '' || this.form.children === null) {
+          //       this.form.children = ["0"];
+          //     }
+          //    }
+             
+          //    if (!this.form.religion) {
+          //      this.errors.religion = 'Religion is required';
+          //      hasError = true;
+          //    }
+          //   if (this.form.smoker === false && this.form.smoker === '') { // Adjusted for boolean
+          //     this.errors.smoker = 'Smoker status is required';
+          //     hasError = true;
+          //   }
+          //   if (!this.form.drinker) {
+          //     this.errors.drinker = 'Drinker status is required';
+          //     hasError = true;
+          //   }
+          // }
           break;
-        case 6: // New case for Seeking
-            if (!this.form.ismatchmaker) {
-             if (!this.form.seeking) {
-               this.errors.seeking = 'Please summerize what you are seeking in your match';
-               hasError = true;
-             }
-            if(!this.form.min_age) {
-              this.errors.min_age = 'Please Enter Minimum Age';
-              hasError = true;
-            } else if (isNaN(this.form.min_age) || this.form.min_age < 18 || this.form.min_age > 100) {
-              this.errors.age = 'Please enter a valid minimum age between 18 and 100';
-              hasError = true;
-            }
-            if(!this.form.max_age) {
-              this.errors.max_age = 'Please Enter Maximum Age';
-              hasError = true;
-            } else if (isNaN(this.form.max_age) || this.form.max_age < 18 || this.form.max_age > 100) {
-              this.errors.age = 'Please enter a valid maximum age between 18 and 100';
-              hasError = true;
-            }
-            if (this.form.current_kids_number === '' || this.form.current_kids_number === null) {
-              this.errors.current_kids_number = 'Current Children is required';
-              hasError = true;
-            }
-            if (this.form.desired_children === '' || this.form.desired_children === null) {
-              this.errors.desired_children = 'Desired Children is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_hair_color) {
-              this.errors.seeking_hair_color = 'Hair Color is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_gender) {
-              this.errors.gender = 'Gender is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_body_type) {
-              this.errors.bodyType = 'Body Type is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_marital_status) {
-              this.errors.maritalStatus = 'Marital Status is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_religion) {
-              this.errors.religion = 'Religion is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_smoker) {
-              this.errors.smoker = 'Smoker is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_drinker) {
-              this.errors.drinker = 'Drinker is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_location) {
-              this.errors.seeking_location = 'Location is required';
-              hasError = true;
-            }
-            if (!this.form.seeking_ethnicity) {
-              this.errors.seeking_ethnicity = 'Ethnicity is required';
-              hasError = true;
-            }
-        }
+        case 6:
+          // if (!this.form.ismatchmaker) {
+          //     // Client Registration Step 5: Professional and Hobbies
+          //   if (!this.form.education) {
+          //     this.errors.education = 'Education is required';
+          //     hasError = true;
+          //   }
+          //   if (!this.form.occupation) {
+          //     this.errors.occupation = 'Occupation is required';
+          //     hasError = true;
+          //   }
+          //   if (!this.form.jobTitle) {
+          //     this.errors.jobTitle = 'Job Title is required';
+          //     hasError = true;
+          //   }
+          //   if (!this.form.languages) {
+          //     this.errors.languages = 'Languages is required';
+          //     hasError = true;
+          //   }
+          // }
         break;
         case 7:
-          if (!this.form.ismatchmaker) {
-            // Client Registration Step 6: Terms and Privacy
-            if (!this.form.privacypolicy) {
-              this.errors.general = 'You must agree to the Privacy Policy';
-              hasError = true;
-            }
-            if (!this.form.termsofuse) {
-              this.errors.general = 'You must agree to the Terms of Use';
-              hasError = true;
-            }
-          }
-          break;
-        
+          // if (!this.form.seeking) {
+          //   this.errors.seeking = 'Please summerize what you are seeking in your match';
+          //   hasError = true;
+          // }
+          // if(!this.form.min_age) {
+          //   this.errors.min_age = 'Please Enter Minimum Age';
+          //   hasError = true;
+          // } else if (isNaN(this.form.min_age) || this.form.min_age < 18 || this.form.min_age > 100) {
+          //   this.errors.age = 'Please enter a valid minimum age between 18 and 100';
+          //   hasError = true;
+          // }
+          // if(!this.form.max_age) {
+          //   this.errors.max_age = 'Please Enter Maximum Age';
+          //   hasError = true;
+          // } else if (isNaN(this.form.max_age) || this.form.max_age < 18 || this.form.max_age > 100) {
+          //   this.errors.age = 'Please enter a valid maximum age between 18 and 100';
+          //   hasError = true;
+          // }
+          // if (this.form.current_kids_number === '' || this.form.current_kids_number === null) {
+          //   this.errors.current_kids_number = 'Current Children is required';
+          //   hasError = true;
+          // }
+          // if (this.form.desired_children === '' || this.form.desired_children === null) {
+          //   this.errors.desired_children = 'Desired Children is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_hair_color) {
+          //   this.errors.seeking_hair_color = 'Hair Color is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_gender) {
+          //   this.errors.gender = 'Gender is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_body_type) {
+          //   this.errors.bodyType = 'Body Type is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_marital_status) {
+          //   this.errors.maritalStatus = 'Marital Status is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_religion) {
+          //   this.errors.religion = 'Religion is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_smoker) {
+          //   this.errors.smoker = 'Smoker is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_drinker) {
+          //   this.errors.drinker = 'Drinker is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_location) {
+          //   this.errors.seeking_location = 'Location is required';
+          //   hasError = true;
+          // }
+          // if (!this.form.seeking_ethnicity) {
+          //   this.errors.seeking_ethnicity = 'Ethnicity is required';
+          //   hasError = true;
+          // }
+        break;
+          
         default:
           break;
       }
@@ -1259,7 +873,7 @@ export default {
       if (this.form.ismatchmaker) {
         this.steps = [1, 2, 3, 4]; // Matchmaker has fewer steps
       } else {
-        this.steps = [1, 2, 3, 4, 5, 6]; // Client has all steps
+        this.steps = [1, 2, 3]; // Client has all steps
       }
 
       // Reset currentStep if it's not in the new steps array
@@ -1308,10 +922,10 @@ export default {
       this.successMessage = '';
 
       // Validate all required fields before submission
-      if (!this.validateAllFields()) {
-        this.processing = false;
-        return;
-      }
+      // if (!this.validateAllFields()) {
+      //   this.processing = false;
+      //   return;
+      // }
 
       // Create a FormData object
       const formData = new FormData();
@@ -1406,7 +1020,7 @@ export default {
 
       try {
         const response = await this.registerUser(formData);
-        if (response.success === true) {
+        if (response.success === true) {          
           this.successMessage = response.message;
           this.validationErrors = {};
           setTimeout(() => {
@@ -1428,33 +1042,33 @@ export default {
     },
     // New method to validate all fields before submission
     validateAllFields() {
-      if (!this.form.ismatchmaker) {
-        // Validate all required client fields
-        const requiredFields = {
-          gender: 'Gender',
-          hairColor: 'Hair Color',
-          bodyType: 'Body Type',
-          heightFeet: 'Height (Feet)',
-          heightInches: 'Height (Inches)',
-          maritalStatus: 'Marital Status',
-          children: 'Children',
-          religion: 'Religion',
-          smoker: 'Smoker',
-          drinker: 'Drinker',
-          education: 'Education',
-          occupation: 'Occupation',
-          jobTitle: 'Job Title',
-          languages: 'Languages',
-          seeking: 'Seeking',
-        };
+      // if (!this.form.ismatchmaker) {
+      //   // Validate all required client fields
+      //   const requiredFields = {
+      //     gender: 'Gender',
+      //     hairColor: 'Hair Color',
+      //     bodyType: 'Body Type',
+      //     heightFeet: 'Height (Feet)',
+      //     heightInches: 'Height (Inches)',
+      //     maritalStatus: 'Marital Status',
+      //     children: 'Children',
+      //     religion: 'Religion',
+      //     smoker: 'Smoker',
+      //     drinker: 'Drinker',
+      //     education: 'Education',
+      //     occupation: 'Occupation',
+      //     jobTitle: 'Job Title',
+      //     languages: 'Languages',
+      //     seeking: 'Seeking',
+      //   };
 
-        for (const [field, label] of Object.entries(requiredFields)) {
-          if (!this.form[field]) {
-            this.errors[field] = `${label} is required`;
-            return false;
-          }
-        }
-      }
+      //   for (const [field, label] of Object.entries(requiredFields)) {
+      //     if (!this.form[field]) {
+      //       this.errors[field] = `${label} is required`;
+      //       return false;
+      //     }
+      //   }
+      // }
 
       // Always validate common fields
       const commonFields = {
@@ -1462,11 +1076,12 @@ export default {
         username: 'Username',
         email: 'Email',
         password: 'Password',
-        phone_number: 'Phone Number',
-        city: 'City',
-        state: 'State',
         country: 'Country',
-        age: 'Age',
+        state: 'State',
+        city: 'City',
+        phone_number: 'Phone Number',
+        privacypolicy: 'Privacy Policy',
+        termsofuse: 'Terms of use',
       };
 
       for (const [field, label] of Object.entries(commonFields)) {

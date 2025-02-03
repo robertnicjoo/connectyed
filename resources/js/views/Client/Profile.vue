@@ -561,6 +561,10 @@
                         inputClass="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     />
                 </div>
+                <div>
+                    <hr class="mt-5">
+                    <SocialMedia />
+                </div>
             </div>
         </div>
     </div>
@@ -569,6 +573,7 @@
 // Import the countries array from countries.js
 import { countries } from '../../components/countries.js';
 import NewPassword from '../NewPassword.vue';
+import SocialMedia from '../SocialMedia.vue';
 import MultiSelectOption from '../../components/MultiSelectOption.vue';
 import SelectOption from '../../components/SelectOption.vue';
 import axios from 'axios';
@@ -619,6 +624,7 @@ export default {
         MultiSelectOption,
         SelectOption,
         NewPassword,
+        SocialMedia,
     },
     computed: {
         // Access user and profile from Vuex store
