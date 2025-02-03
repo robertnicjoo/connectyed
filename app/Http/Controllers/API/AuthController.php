@@ -429,26 +429,52 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $profile = $user->profile;
-            $seeking = $user->seeking;
+            // Eager load profile and seeking
+            $user->load(['profile', 'seeking']);
+            
+            DB::beginTransaction();
 
-            // Add package information
-            $packageInfo = [
-                'purchased_package' => $user->purchased_package,
-                'criteria_limit' => $user->criteria_limit,
-                'package_purchased_at' => $user->package_purchased_at,
-                'criteria' => $user->criteria
-            ];
+            try {
+                // Create profile if not exists
+                if (!$user->profile) {
+                    $profile = Profile::create(['user_id' => $user->id]);
+                } else {
+                    $profile = $user->profile;
+                }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Authorized',
-                'data' => [
-                    'user' => array_merge($user->toArray(), $packageInfo),
-                    'profile' => $profile,
-                    'seeking' => $seeking
-                ]
-            ]);
+                // Create seeking if not exists
+                if (!$user->seeking) {
+                    $seeking = Seeking::create(['user_id' => $user->id]);
+                } else {
+                    $seeking = $user->seeking;
+                }
+
+                // Add package information
+                $packageInfo = [
+                    'purchased_package' => $user->purchased_package,
+                    'criteria_limit' => $user->criteria_limit,
+                    'package_purchased_at' => $user->package_purchased_at,
+                    'criteria' => $user->criteria
+                ];
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Authorized',
+                    'data' => [
+                        'user' => array_merge($user->toArray(), $packageInfo),
+                        'profile' => $profile,
+                        'seeking' => $seeking
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong: ' . $e->getMessage()
+                ], 500);
+            }
         } else {
             return response()->json([
                 'success' => false,
@@ -456,6 +482,7 @@ class AuthController extends Controller
             ], 401);
         }
     }
+
 
     /**
      * Resend verification email.
