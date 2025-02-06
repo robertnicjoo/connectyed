@@ -25,7 +25,7 @@
                 <div class="flex">
                     <!-- Profile Images Section -->
                     <div class="col-4 p-2">
-                        <div class="flex flex-wrap justify-left cursor-pointer">
+                        <div class="flex flex-wrap justify-left">
                             <!-- Main Image -->
                             <div class="w-[270px] h-[360px] overflow-hidden bg-gray-400">
                                 <img
@@ -35,20 +35,19 @@
                                 />
                             </div>
 
-                            <!-- Thumbnails -->
-                            <div class="flex flex-wrap justify-left gap-2 mt-2">
-                                <div
-                                    class="w-[45px] h-[61px] p-1 overflow-hidden cursor-pointer"
-                                    v-for="(image, index) in profile.additionalImages"
-                                    :key="image"
-                                >
-                                    <img
-                                        :src="image"
-                                        @click="updateAvatar(image)"
-                                        alt="Profile Thumbnail"
-                                        class="shadow-sm bg-gray-400 w-full h-full object-cover rounded"
-                                    />
-                                </div>
+                        </div>
+                        <!-- Thumbnails -->
+                        <div class="flex flex-wrap justify-left gap-2 mt-2">
+                            <div
+                                class="w-[45px] h-[61px] p-1 overflow-hidden"
+                                v-for="(image, index) in additionalImages"
+                                :key="image"
+                            >
+                                <img
+                                    :src="image"
+                                    alt="Profile Thumbnail"
+                                    class="shadow-sm bg-gray-400 w-full h-full object-cover rounded"
+                                />
                             </div>
                         </div>
 
@@ -599,7 +598,6 @@ export default {
             userCity: '',
             countries: countries,
             filteredCountries: countries.map(country => country.name), // For search functionality
-            user: {},
             profile: {
                 bio: '',
                 country: '',
@@ -609,12 +607,24 @@ export default {
                 city: '',
                 bodytype: [],
                 languages: [],
-                additionalImages: [],
                 maritalstatus: [],
                 children: '',
                 religion: [],
+                age: '',
+                gender: '',
+                height: '',
+                inches: '',
+                haircolor: '',
+                smoker: '',
+                drinker: '',
+                education: '',
+                jobtitle: '',
+                sports: '',
+                hobbies: '',
+                name: '',
             },
             isFormVisible: false,
+            additionalImages: [],
             processing: false,
             currentAvatar: null,
             authorization: this.$store.state.auth.authorization,
@@ -628,8 +638,8 @@ export default {
     },
     computed: {
         // Access user and profile from Vuex store
-        userFromStore() {
-            return this.$store.getters['auth/user'];
+        user() {
+            return this.$store.state.auth.user;
         },
         profileFromStore() {
             return this.$store.getters['auth/profile'];
@@ -705,17 +715,13 @@ export default {
                 if (response.data.success) {
                     // Set profile and user data
                     this.profile = response.data.data;
-                    this.user = response.data.data.user;
+                    this.user = response.data.data.user; // Ensure `this.user` is at least an empty object
+
                     this.profile.email = this.user.email;
                     this.profile.username = this.user.username;
 
                     this.userCity = this.profile.city;
-                    
-                    // Ensure additionalImages is an array
-                    if (!Array.isArray(this.profile.additionalImages)) {
-                        this.profile.additionalImages = [];
-                    }
-
+              
                     // Decode bodytype from JSON string to array
                     if (typeof this.profile.bodytype === 'string') {
                         try {
@@ -778,10 +784,16 @@ export default {
                     
                     // Set current avatar
                     this.currentAvatar = this.profile.profile_image1 || '/upload/images/profiles/default.png';
+                    // Ensure additionalImages is an array
+                    if (!this.additionalImages) {
+                        this.additionalImages = [];
+                    } else {
+                        this.additionalImages.push(this.profile.profile_image2 || '/upload/images/profiles/default.png');
+                    }
 
                     // Update Vuex store with fetched user and profile
                     this.$store.commit('auth/SET_USER', this.user);
-                    this.$store.commit('auth/SET_PROFILE', this.profile);
+                    // this.$store.commit('auth/SET_PROFILE', this.profile);
                 } else {
                     alert('Failed to fetch profile data.');
                 }
@@ -812,6 +824,18 @@ export default {
                 formData.append('profile[state]', this.profile.state || '');
                 formData.append('profile[city]', this.profile.city || '');                
                 formData.append('profile[children]', this.profile.children || '');
+                formData.append('profile[age]', this.profile.age || '');
+                formData.append('profile[gender]', this.profile.gender || '');
+                formData.append('profile[height]', this.profile.height || '');
+                formData.append('profile[inches]', this.profile.inches || '');
+                formData.append('profile[haircolor]', this.profile.haircolor || '');
+                formData.append('profile[smoker]', this.profile.smoker || '');
+                formData.append('profile[drinker]', this.profile.drinker || '');
+                formData.append('profile[education]', this.profile.education || '');
+                formData.append('profile[jobtitle]', this.profile.jobtitle || '');
+                formData.append('profile[sports]', this.profile.sports || '');
+                formData.append('profile[hobbies]', this.profile.hobbies || '');
+                formData.append('profile[name]', this.profile.name || '');
 
                 // Append bodyType array
                 this.profile.maritalstatus.forEach(item => {
@@ -849,9 +873,10 @@ export default {
 
                     // Update Vuex store
                     this.$store.commit('auth/SET_USER', this.user);
-                    this.$store.commit('auth/SET_PROFILE', this.profile);
+                    // this.$store.commit('auth/SET_PROFILE', this.profile);
 
                     this.currentAvatar = this.profile.profile_image1 || '/upload/images/profiles/default.png';
+                    this.additionalImages.push(this.profile.profile_image2 || '/upload/images/profiles/default.png');
                     this.isFormVisible = false;
 
                     alert('Profile updated successfully');
@@ -894,13 +919,14 @@ export default {
                         this.currentAvatar = response.data.data;
                     } else if (imageNumber === 2) {
                         // Assuming you have a separate field for the second image
-                        if (!this.profile.additionalImages) {
-                            this.profile.additionalImages = [];
+                        if (!this.additionalImages) {
+                            this.additionalImages = [];
+                        } else {
+                            this.additionalImages.push(response.data.data);
                         }
-                        this.profile.additionalImages.push(response.data.data);
                     }
                     // Update Vuex store with the new profile
-                    this.$store.commit('auth/SET_PROFILE', this.profile);
+                    // this.$store.commit('auth/SET_PROFILE', this.profile);
                     alert('Image uploaded successfully');
                 } else {
                     alert('Failed to upload image.');
@@ -930,7 +956,7 @@ export default {
                     this.currentAvatar = response.data.data.profile_image1 || '/upload/images/profiles/default.png';
 
                     // Update Vuex store with the new profile
-                    this.$store.commit('auth/SET_PROFILE', this.profile);
+                    // this.$store.commit('auth/SET_PROFILE', this.profile);
                     alert('Avatar updated successfully');
                 } else {
                     alert('Failed to update avatar.');

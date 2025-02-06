@@ -42,7 +42,6 @@ class AuthController extends Controller
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:255',
                 'country' => 'required|string|max:255',
-                'phone_number' => 'required|string|max:255',
             ]);
 
             if ($validator->fails()) {
@@ -58,7 +57,6 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'username' => $request->username,
                 'email' => $request->email,
-                'phone_number' => $request->phone_number,
                 'phone_verified' => false,
                 'password' => Hash::make($request->password),
                 'role' => $request->boolean('ismatchmaker') ? 'candidate' : 'client',
@@ -536,7 +534,6 @@ class AuthController extends Controller
             'username',
             'email',
             'password',
-            'phone_number',
             'phone_verified',
         ];
         $fillableProfiles = [

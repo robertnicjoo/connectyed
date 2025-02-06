@@ -8,7 +8,7 @@
     </div>
 
     <!-- Add Login Button -->
-    <div class="login-button-container">
+    <div class="z-50 login-button-container">
       <a :href="loginUrl" class="login-button text-black">Login</a>
       <a :href="registerUrl" class="login-button text-black">Register</a>
     </div>

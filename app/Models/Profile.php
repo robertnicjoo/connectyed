@@ -43,7 +43,6 @@ class Profile extends Model
         'ethnicity',
         'having_kids',
         'having_kids_in_future',
-
     ];
 
     /**

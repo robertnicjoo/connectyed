@@ -75,13 +75,12 @@ export default {
             await axios.get('/api/profile/getprofileForAdmin/'+username)
                 .then((response) => {
                     if (response.data) {      
-                        console.log('data::: ', response.data.data);
                         const profile = response.data.data
                         this.currentAvatar = response.data.data.avatar
                         this.profile = profile
                         this.profile.clients = response.data.data.profile_list ?? []
-                        this.profile.specialties = response.data.data.specialties ?? []
-                        this.profile.parsedLocations = (response.data.data.specialties) ? JSON.parse(response.data.data.specialties.locations) : []
+                        // this.profile.specialties = response.data.data.specialties ?? []
+                        // this.profile.parsedLocations = (response.data.data.specialties) ? JSON.parse(response.data.data.specialties.locations) : []
                         this.isMatchmaker = (profile.user.role === 'matchmaker' || profile.user.role === 'candidate') 
                     } else {                        
                         this.$router.push({ name: "notfound" });
