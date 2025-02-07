@@ -213,6 +213,37 @@
               :error="errors.city"
               @change="handleCitySearch(form.city)"
             />
+
+            <h3 class="font-semibold text-lg mb-4">Profile Details</h3>
+            <!-- Profile Image 1 -->
+            <div class="mb-4">
+              <label class="block text-gray-700">
+                Upload Profile Image <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="file" 
+                @change="onFileChange($event, 'profile_image1')" 
+                accept="image/*" 
+                required
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                      file:rounded-lg file:border-0 file:text-sm file:font-semibold
+                      file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
+              <p v-if="errors.profile_image1" class="text-red-500 text-xs italic">{{ errors.profile_image1 }}</p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-gray-700">
+                Summarize what you are seeking in a match <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                v-model="form.seeking"
+                placeholder="Please explain"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              ></textarea>
+              <p v-if="errors.seeking" class="text-red-500 text-xs italic">{{ errors.seeking }}</p>
+            </div>
           </div>
         </div>
 
@@ -435,6 +466,9 @@ export default {
         header: "",
       },
       processing: false,
+      files: {
+        profile_image1: null,
+      },
       // New Data for File Uploads
       files: {
         profile_image1: null,
@@ -589,16 +623,24 @@ export default {
             }
           } else {
             // Client Registration Step 2: Location Details
-            if (!this.form.city) {
-              this.errors.city = 'City is required';
+            if (!this.form.country) {
+              this.errors.country = 'Country is required';
               hasError = true;
             }
             if (!this.form.state) {
               this.errors.state = 'State is required';
               hasError = true;
             }
-            if (!this.form.country) {
-              this.errors.country = 'Country is required';
+            if (!this.form.city) {
+              this.errors.city = 'City is required';
+              hasError = true;
+            }
+            if (!this.files.profile_image1) {
+              this.errors.profile_image1 = 'Profile Image is required';
+              hasError = true;
+            }
+            if (!this.form.seeking) {
+              this.errors.seeking = 'Please summerize what you are seeking in your match';
               hasError = true;
             }
           }

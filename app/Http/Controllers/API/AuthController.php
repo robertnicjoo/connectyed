@@ -99,6 +99,7 @@ class AuthController extends Controller
             } else {
                $seekingData = [
                 'user_id' => $user->id,
+                'summarize' => $request->input('seeking'),
                ];
                $seeking = Seeking::create($seekingData);
             }
@@ -110,9 +111,9 @@ class AuthController extends Controller
             DB::commit();
 
             // Now handle image uploads after transaction commits
-            if ($request->boolean('ismatchmaker')) {
+            // if ($request->boolean('ismatchmaker')) {
                 $this->handleImageUploads($request, $user, $profile);
-            }
+            // }
 
             // Trigger verification email
             event(new Registered($user));
