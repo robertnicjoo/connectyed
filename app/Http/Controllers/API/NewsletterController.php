@@ -67,22 +67,22 @@ class NewsletterController extends Controller
         return redirect('/')->with('success', 'Your subscription has been confirmed!');
     }
     public function unsubscribe(Request $request)
-{
-    $email = $request->query('email');
+    {
+        $email = $request->query('email');
 
-    if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        return redirect('/')->with('error', 'Invalid unsubscription link.');
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return redirect('/')->with('error', 'Invalid unsubscription link.');
+        }
+
+        $subscriber = NewsletterSubscriber::where('email', $email)->first();
+
+        if (!$subscriber) {
+            return redirect('/')->with('error', 'Subscription not found.');
+        }
+
+        $subscriber->delete();
+
+        return redirect('/')->with('success', 'You have been unsubscribed from the newsletter.');
     }
-
-    $subscriber = NewsletterSubscriber::where('email', $email)->first();
-
-    if (!$subscriber) {
-        return redirect('/')->with('error', 'Subscription not found.');
-    }
-
-    $subscriber->delete();
-
-    return redirect('/')->with('success', 'You have been unsubscribed from the newsletter.');
-}
 
 }
